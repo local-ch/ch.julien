@@ -12,7 +12,7 @@ public class FuncsTest {
 
 	@Test
 	public void testTo() {
-		// implicitly assert absence of class cast exceptions!
+		// implicitly assert absence of class cast exceptions when assigning to var!
 		TestType var;
 		
 		// same type
@@ -34,17 +34,54 @@ public class FuncsTest {
 	}
 	
 	@Test(expected=ClassCastException.class)
-	public void testTo_Exception1() throws Exception {
+	public void testTo_Exception1() {
 		// supertype
 		@SuppressWarnings("unused")	// no exception without assignment
 		TestType var = Funcs.to(TestType.class).invoke(new Object());
 	}
 	
 	@Test(expected=ClassCastException.class)
-	public void testTo_Exception2() throws Exception {
+	public void testTo_Exception2() {
 		// unrelated type
 		@SuppressWarnings("unused")	// no exception without assignment
 		TestType var = Funcs.to(TestType.class).invoke("instance of unrelated type");
 	}
-
+	
+	@Test
+	public void testReplaceAll() {
+		assertThat(Funcs.replaceAll("regex", "replacement").invoke("")).isEqualTo("");
+		assertThat(Funcs.replaceAll("regex", "replacement").invoke("no match")).isEqualTo("no match");
+		assertThat(Funcs.replaceAll("regex", "replacement").invoke("regex and shit")).isEqualTo("replacement and shit");
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testReplaceAll_Exception1() {
+		Funcs.replaceAll("regex", "replacement").invoke(null);
+	}
+	
+	@Test
+	public void testTrimString() {
+		assertThat(Funcs.trimString().invoke("")).isEqualTo("");
+		assertThat(Funcs.trimString().invoke(" ")).isEqualTo("");
+		assertThat(Funcs.trimString().invoke("\t")).isEqualTo("");
+		assertThat(Funcs.trimString().invoke("a a")).isEqualTo("a a");
+		assertThat(Funcs.trimString().invoke(" a a")).isEqualTo("a a");
+		assertThat(Funcs.trimString().invoke("a a ")).isEqualTo("a a");
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testTrimString_Exception1() {
+		Funcs.trimString().invoke(null);
+	}
+	
+	@Test
+	public void testParseInteger() {
+		assertThat(Funcs.parseInteger().invoke("1")).isEqualTo(1);
+	}
+	
+	@Test
+	public void testParseDouble() {
+		assertThat(Funcs.parseDouble().invoke("1.2")).isEqualTo(1.2);
+	}
+	
 }
