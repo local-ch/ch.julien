@@ -8,18 +8,16 @@ public class Accumulators {
 		return new Accumulator<T, T>() {
 			@SuppressWarnings("unchecked")
 			@Override public T accumulate(T accumulate, T source) {
-				Double sum = accumulate.doubleValue() + source.doubleValue();
-				
 				if (Double.class.isAssignableFrom(accumulate.getClass())) {
-					return (T) sum;
+					return (T) (Double) (accumulate.doubleValue() + source.doubleValue());
 				} else if (Float.class.isAssignableFrom(accumulate.getClass())) {
-					return (T) (Float) sum.floatValue();
+					return (T) (Float) (accumulate.floatValue() + source.floatValue());
 				} else if (Integer.class.isAssignableFrom(accumulate.getClass())) {
-					return (T) (Integer) sum.intValue();
+					return (T) (Integer) (accumulate.intValue() + source.intValue());
 				} else if (Long.class.isAssignableFrom(accumulate.getClass())) {
-					return (T) (Long) sum.longValue();
+					return (T) (Long) (accumulate.longValue() + source.longValue());
 				} else if (Short.class.isAssignableFrom(accumulate.getClass())) {
-					return (T) (Short) sum.shortValue();
+					return (T) (Short) ((Integer) (accumulate.shortValue() + source.shortValue())).shortValue();
 				} else {
 					throw new UnsupportedOperationException();
 				}
