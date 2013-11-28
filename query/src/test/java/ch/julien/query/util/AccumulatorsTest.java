@@ -16,6 +16,13 @@ import org.junit.Test;
 public class AccumulatorsTest {
 
 	@Test
+	public void testJoinOn() {
+		assertThat(Accumulators.joinOn(null).accumulate("a", "b")).isEqualTo("a, b");
+		assertThat(Accumulators.joinOn(" ").accumulate("a", "b")).isEqualTo("a b");
+		assertThat(Accumulators.joinOn(" , ").accumulate("a", "b")).isEqualTo("a , b");
+	}
+	
+	@Test
 	public void testSum() {
 		// test supported number types
 		assertThat(Accumulators.<Byte>sum().accumulate((byte)2, (byte)3)).isEqualTo((byte)5);

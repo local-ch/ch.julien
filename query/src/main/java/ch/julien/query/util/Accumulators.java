@@ -5,6 +5,18 @@ import ch.julien.common.delegate.Accumulator;
 
 public class Accumulators {
 
+	public static final Accumulator <String, String> joinOn(String separator) {
+		final String _separator = (separator == null || separator.isEmpty()
+				? ", "	// default separator
+				: separator
+				);
+		return new Accumulator<String, String>() {
+			@Override public String accumulate(String accumulate, String source) {
+				return accumulate + _separator + source;
+			}
+		};
+	}
+	
 	public static final <T extends Number> Accumulator<T, T> sum() {
 		return new Accumulator<T, T>() {
 			@SuppressWarnings("unchecked")
