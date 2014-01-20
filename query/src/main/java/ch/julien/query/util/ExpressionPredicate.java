@@ -9,7 +9,6 @@ import org.fest.util.Lists;
 import ch.julien.common.delegate.Predicate;
 
 
-@SuppressWarnings("unchecked")
 public class ExpressionPredicate<T> implements Predicate<T> {
 	
 	private static interface Operator {
@@ -18,16 +17,16 @@ public class ExpressionPredicate<T> implements Predicate<T> {
 	
 	private enum BinaryOperator implements Operator {
 		AND		(10) {
-			@Override
-			public <T> void apply(Stack<Object> stack) {
+			@SuppressWarnings("unchecked")
+			@Override public <T> void apply(Stack<Object> stack) {
 				Predicate<T> p1 = popPredicate(stack);
 				Predicate<T> p2 = popPredicate(stack);
 				stack.push(Predicates.and(p1, p2));
 			}
 		},
 		OR		(20) {
-			@Override
-			public <T> void apply(Stack<Object> stack) {
+			@SuppressWarnings("unchecked")
+			@Override public <T> void apply(Stack<Object> stack) {
 				Predicate<T> p1 = popPredicate(stack);
 				Predicate<T> p2 = popPredicate(stack);
 				stack.push(Predicates.or(p1, p2));
@@ -78,6 +77,7 @@ public class ExpressionPredicate<T> implements Predicate<T> {
 		return resolveReversePolishNotation(stack);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static <T> Predicate<T> resolveReversePolishNotation(Stack<Object> stack) {
 		if (stack.size() == 1) {
 			return (Predicate<T>) stack.peek();
@@ -87,6 +87,7 @@ public class ExpressionPredicate<T> implements Predicate<T> {
 		return (Predicate<T>) stack.peek();
 	}
 
+	@SuppressWarnings("unchecked")
 	private static <T> Predicate<T> popPredicate(Stack<Object> stack) {
 		if ( ! (stack.peek() instanceof Predicate)) {
 			resolveReversePolishNotation(stack);
