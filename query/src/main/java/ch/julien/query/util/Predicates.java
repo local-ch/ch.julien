@@ -55,6 +55,15 @@ public class Predicates {
 		};
 	}
 	
+	public static final Predicate<Class<?>> elementAssignableFrom(final Class<?> clazz) {
+		return new Predicate<Class<?>>() {
+			@Override
+			public boolean invoke(Class<?> arg) {
+				return arg != null && arg.isAssignableFrom(clazz);
+			}
+		};
+	}
+	
 	public static final <T> ExpressionPredicate<T> that(final Predicate<T> predicate) {
 		return new ExpressionPredicate<T>(predicate);
 	}
