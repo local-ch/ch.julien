@@ -2,9 +2,11 @@ package ch.julien.query.util;
 
 import static java.util.Arrays.asList;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.*;
 import static ch.julien.query.util.Predicates.all;
 import static ch.julien.query.util.Predicates.none;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -68,12 +70,13 @@ public class PredicatesTest {
 		assertThat(Predicates.notEmptyArray().invoke(array3)).isTrue();
 	}
 	
-	private static class TestType {}
+	private static interface ITestType {}
+	private static class TestType implements ITestType {}
 	private static class TestSubtype extends TestType {}
 	
 	@Test
 	public void testElementOfInstance() {
-		// test basic cases
+		// test basic cases with class
 		assertThat(Predicates.elementOfInstance(TestType.class).invoke(null)).isFalse();
 		assertThat(Predicates.elementOfInstance(TestType.class).invoke(new Object())).isFalse();		// super type
 		assertThat(Predicates.elementOfInstance(TestType.class).invoke("non-parent-object")).isFalse();	// any type
@@ -81,6 +84,16 @@ public class PredicatesTest {
 		assertThat(Predicates.elementOfInstance(TestType.class).invoke(new TestType())).isTrue();		// THE type
 		assertThat(Predicates.elementOfInstance(TestType.class).invoke(new TestSubtype())).isTrue();	// subtype
 		assertThat(Predicates.elementOfInstance(TestType.class).invoke(new TestType() {})).isTrue();	// anonymous subtype
+		
+		// test basic cases with interface
+		assertThat(Predicates.elementOfInstance(ITestType.class).invoke(null)).isFalse();
+		assertThat(Predicates.elementOfInstance(ITestType.class).invoke(new Object())).isFalse();		// super type
+		assertThat(Predicates.elementOfInstance(ITestType.class).invoke("non-parent-object")).isFalse();// any type
+		assertThat(Predicates.elementOfInstance(ITestType.class).invoke(new Object() {})).isFalse();	// any anonymous type
+		assertThat(Predicates.elementOfInstance(ITestType.class).invoke(new TestType())).isTrue();		// type
+		assertThat(Predicates.elementOfInstance(ITestType.class).invoke(new TestSubtype())).isTrue();	// subtype
+		assertThat(Predicates.elementOfInstance(ITestType.class).invoke(new TestType() {})).isTrue();	// anonymous subtype
+		assertThat(Predicates.elementOfInstance(ITestType.class).invoke(new ITestType() {})).isTrue();	// anonymous subtype of THE interface
 	}
 	
 	@Test
@@ -89,6 +102,25 @@ public class PredicatesTest {
 		List<String> castedList = Query.from(list).select(Predicates.elementOfInstance(String.class)).map(Funcs.to(String.class)).asArrayList();
 		assertThat(castedList.size()).isEqualTo(1);
 		assertThat(castedList.get(0)).isEqualTo((String) list.get(1));
+	}
+	
+	@Test
+	public void testElementAssignableFrom() {
+		// test basic cases with class
+		assertThat(Predicates.elementAssignableFrom(TestType.class).invoke(null)).isFalse();
+		assertThat(Predicates.elementAssignableFrom(TestType.class).invoke(Object.class)).isTrue();			// super type
+		assertThat(Predicates.elementAssignableFrom(TestType.class).invoke(String.class)).isFalse();		// any type
+		assertThat(Predicates.elementAssignableFrom(TestType.class).invoke(ITestType.class)).isTrue();		// super interface
+		assertThat(Predicates.elementAssignableFrom(TestType.class).invoke(TestType.class)).isTrue();		// THE type
+		assertThat(Predicates.elementAssignableFrom(TestType.class).invoke(TestSubtype.class)).isFalse();	// subtype
+		
+		// test basic cases with interface
+		assertThat(Predicates.elementAssignableFrom(ITestType.class).invoke(null)).isFalse();
+		assertThat(Predicates.elementAssignableFrom(ITestType.class).invoke(Object.class)).isTrue();		// super type
+		assertThat(Predicates.elementAssignableFrom(ITestType.class).invoke(String.class)).isFalse();		// any type
+		assertThat(Predicates.elementAssignableFrom(ITestType.class).invoke(ITestType.class)).isTrue();		// THE interface
+		assertThat(Predicates.elementAssignableFrom(ITestType.class).invoke(TestType.class)).isFalse();		// type
+		assertThat(Predicates.elementAssignableFrom(ITestType.class).invoke(TestSubtype.class)).isFalse();	// subtype
 	}
 	
 	Predicate<Object> all = all();
