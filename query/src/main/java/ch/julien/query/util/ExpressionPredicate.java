@@ -9,7 +9,37 @@ import org.fest.util.Lists;
 import ch.julien.common.delegate.Predicate;
 
 
+/**
+ * Wrapper for {@link Predicate} implementations that allows to easily build
+ * conjunctions with other predicates.
+ */
 public class ExpressionPredicate<T> implements Predicate<T> {
+	
+	/** Compiled version of this expression predicate */
+	private Predicate<T> compiledPredicate = null;
+	private List<Object> expressionTokens = Lists.newArrayList();
+	
+	public ExpressionPredicate(Predicate<T> predicate) {
+		this.expressionTokens.add(predicate);
+	}
+	
+	public ExpressionPredicate<T> and(Predicate<T> predicate) {
+		addTokens(BinaryOperator.AND, predicate);
+		return this;
+	}
+	
+	public ExpressionPredicate<T> or(Predicate<T> predicate) {
+		addTokens(BinaryOperator.OR, predicate);
+		return this;
+	}
+	
+	@Override
+	public boolean invoke(T arg) {
+		if (this.compiledPredicate == null) {
+			this.compiledPredicate = compilePredicate();
+		}
+		return this.compiledPredicate.invoke(arg);
+	}
 	
 	private static interface Operator {
 		<T> void apply(Stack<Object> stack);
@@ -39,32 +69,6 @@ public class ExpressionPredicate<T> implements Predicate<T> {
 		}
 	}
 	
-	/** Compiled version of this expression predicate */
-	private Predicate<T> compiledPredicate = null;
-	private List<Object> expressionTokens = Lists.newArrayList();
-	
-	public ExpressionPredicate(Predicate<T> predicate) {
-		this.expressionTokens.add(predicate);
-	}
-	
-	public ExpressionPredicate<T> and(Predicate<T> predicate) {
-		addTokens(BinaryOperator.AND, predicate);
-		return this;
-	}
-	
-	public ExpressionPredicate<T> or(Predicate<T> predicate) {
-		addTokens(BinaryOperator.OR, predicate);
-		return this;
-	}
-	
-	@Override
-	public boolean invoke(T arg) {
-		if (this.compiledPredicate == null) {
-			this.compiledPredicate = compilePredicate();
-		}
-		return this.compiledPredicate.invoke(arg);
-	}
-	
 	private void addTokens(BinaryOperator op, Predicate<T> predicate) {
 		this.compiledPredicate = null;
 		this.expressionTokens.add(op);
@@ -73,7 +77,7 @@ public class ExpressionPredicate<T> implements Predicate<T> {
 
 	private Predicate<T> compilePredicate() {
 		Stack<Object> stack = new Stack<Object>();
-		stack.addAll(getReversePolishNotation(expressionTokens));
+		stack.addAll(getReversePolishNotation(this.expressionTokens));
 		return resolveReversePolishNotation(stack);
 	}
 	
