@@ -2,11 +2,9 @@ package ch.julien.query.util;
 
 import static java.util.Arrays.asList;
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.junit.Assert.*;
 import static ch.julien.query.util.Predicates.all;
 import static ch.julien.query.util.Predicates.none;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,7 +12,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import ch.julien.common.delegate.Predicate;
 import ch.julien.query.core.Query;
 
 
@@ -123,40 +120,37 @@ public class PredicatesTest {
 		assertThat(Predicates.elementAssignableFrom(ITestType.class).invoke(TestSubtype.class)).isFalse();	// subtype
 	}
 	
-	Predicate<Object> all = all();
-	Predicate<Object> none = none();
-
 	@Test
 	public void testNot() {
-		assertThat(Predicates.not(all).invoke(null)).isFalse();
-		assertThat(Predicates.not(none).invoke(null)).isTrue();
+		assertThat(Predicates.not(all()).invoke(null)).isFalse();
+		assertThat(Predicates.not(none()).invoke(null)).isTrue();
 	}
 	
 	@Test
 	@SuppressWarnings("unchecked")
 	public void testAnd() {
-		assertThat(Predicates.and(all, all).invoke(null)).isTrue();
-		assertThat(Predicates.and(all, none).invoke(null)).isFalse();
-		assertThat(Predicates.and(none, all).invoke(null)).isFalse();
-		assertThat(Predicates.and(none, none).invoke(null)).isFalse();
+		assertThat(Predicates.and(all(), all()).invoke(null)).isTrue();
+		assertThat(Predicates.and(all(), none()).invoke(null)).isFalse();
+		assertThat(Predicates.and(none(), all()).invoke(null)).isFalse();
+		assertThat(Predicates.and(none(), none()).invoke(null)).isFalse();
 	}
 
 	@Test
 	@SuppressWarnings("unchecked")
 	public void testOr() {
-		assertThat(Predicates.or(all, all).invoke(null)).isTrue();
-		assertThat(Predicates.or(all, none).invoke(null)).isTrue();
-		assertThat(Predicates.or(none, all).invoke(null)).isTrue();
-		assertThat(Predicates.or(none, none).invoke(null)).isFalse();
+		assertThat(Predicates.or(all(), all()).invoke(null)).isTrue();
+		assertThat(Predicates.or(all(), none()).invoke(null)).isTrue();
+		assertThat(Predicates.or(none(), all()).invoke(null)).isTrue();
+		assertThat(Predicates.or(none(), none()).invoke(null)).isFalse();
 	}
 	
 	@Test
 	@SuppressWarnings("unchecked")
 	public void testXor() {
-		assertThat(Predicates.xor(all, all).invoke(null)).isFalse();
-		assertThat(Predicates.xor(all, none).invoke(null)).isTrue();
-		assertThat(Predicates.xor(none, all).invoke(null)).isTrue();
-		assertThat(Predicates.xor(none, none).invoke(null)).isFalse();
+		assertThat(Predicates.xor(all(), all()).invoke(null)).isFalse();
+		assertThat(Predicates.xor(all(), none()).invoke(null)).isTrue();
+		assertThat(Predicates.xor(none(), all()).invoke(null)).isTrue();
+		assertThat(Predicates.xor(none(), none()).invoke(null)).isFalse();
 	}
 	
 	@Test
