@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.PatternSyntaxException;
 
 import org.junit.Test;
 
@@ -189,6 +190,19 @@ public class PredicatesTest {
 		assertThat(Predicates.stringMatching("^.[ab]{1}$").invoke(" a ")).isFalse();
 		assertThat(Predicates.stringMatching("^.[ab]{1}$").invoke(" b")).isTrue();
 		assertThat(Predicates.stringMatching("^.[ab]{1}$").invoke(" c")).isFalse();
+		
+		assertThat(Predicates.stringMatching("a").invoke("ab")).isFalse();
+		assertThat(Predicates.stringMatching("a.*").invoke("ab")).isTrue();
+		assertThat(Predicates.stringMatching("").invoke("a")).isFalse();
 	}
 	
+	@Test(expected=NullPointerException.class)
+	public void testStringMatching_Exception1() {
+		assertThat(Predicates.stringMatching(null).invoke("a"));
+	}
+	
+	@Test(expected=PatternSyntaxException.class)
+	public void testStringMatching_Exception2() {
+		assertThat(Predicates.stringMatching("(illegal_pattern_syntax").invoke("a"));
+	}
 }

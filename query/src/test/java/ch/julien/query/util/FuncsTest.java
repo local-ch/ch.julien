@@ -7,44 +7,76 @@ import org.junit.Test;
 
 public class FuncsTest {
 
-	private static class TestType {}
+	private static interface ITestType {}
+	private static class TestType implements ITestType {}
 	private static class TestSubtype extends TestType {}
 
 	@Test
 	public void testTo() {
 		// implicitly assert absence of class cast exceptions when assigning to var!
 		TestType var;
+		ITestType ivar;
 		
-		// same type
+		// to same type
 		var = Funcs.to(TestType.class).invoke(new TestType());
 		assertThat(var).isNotNull();
 		
-		// subtype
+		// to interface
+		ivar = Funcs.to(ITestType.class).invoke(new TestType());
+		assertThat(ivar).isNotNull();
+		
+		// to supertype
 		var = Funcs.to(TestType.class).invoke(new TestSubtype());
 		assertThat(var).isNotNull();
 		
-		// anonymous subtype
+		// to interface of supertype
+		ivar = Funcs.to(ITestType.class).invoke(new TestSubtype());
+		assertThat(ivar).isNotNull();
+
+		// anonymous subtype to type
 		var = Funcs.to(TestType.class).invoke(new TestType() {});
 		assertThat(var).isNotNull();
 		
-		// variable of supertype
+		// anonymous subtype to interface
+		ivar = Funcs.to(ITestType.class).invoke(new TestType() {});
+		assertThat(ivar).isNotNull();
+		
+		// variable of supertype to type
 		Object testClassInstance = new TestType();
 		var = Funcs.to(TestType.class).invoke(testClassInstance);
 		assertThat(var).isNotNull();
+		
+		// variable of supertype to interface
+		ivar = Funcs.to(ITestType.class).invoke(testClassInstance);
+		assertThat(ivar).isNotNull();
 	}
 	
 	@Test(expected=ClassCastException.class)
 	public void testTo_Exception1() {
-		// supertype
+		// supertype to type
 		@SuppressWarnings("unused")	// no exception without assignment
 		TestType var = Funcs.to(TestType.class).invoke(new Object());
 	}
 	
 	@Test(expected=ClassCastException.class)
 	public void testTo_Exception2() {
-		// unrelated type
+		// supertype to interface
+		@SuppressWarnings("unused")	// no exception without assignment
+		ITestType ivar = Funcs.to(ITestType.class).invoke(new Object());
+	}
+	
+	@Test(expected=ClassCastException.class)
+	public void testTo_Exception3() {
+		// unrelated type to type
 		@SuppressWarnings("unused")	// no exception without assignment
 		TestType var = Funcs.to(TestType.class).invoke("instance of unrelated type");
+	}
+	
+	@Test(expected=ClassCastException.class)
+	public void testTo_Exception4() {
+		// unrelated type to interface
+		@SuppressWarnings("unused")	// no exception without assignment
+		ITestType ivar = Funcs.to(ITestType.class).invoke("instance of unrelated type");
 	}
 	
 	@Test
@@ -79,9 +111,45 @@ public class FuncsTest {
 		assertThat(Funcs.parseInteger().invoke("1")).isEqualTo(1);
 	}
 	
+	@Test(expected=NumberFormatException.class)
+	public void testParseInteger_Exception1() {
+		assertThat(Funcs.parseInteger().invoke(null));
+	}
+	
+	@Test(expected=NumberFormatException.class)
+	public void testParseInteger_Exception2() {
+		assertThat(Funcs.parseInteger().invoke(""));
+	}
+	
+	@Test(expected=NumberFormatException.class)
+	public void testParseInteger_Exception3() {
+		assertThat(Funcs.parseInteger().invoke("no_integer"));
+	}
+	
+	@Test(expected=NumberFormatException.class)
+	public void testParseInteger_Exception4() {
+		assertThat(Funcs.parseInteger().invoke("1.2"));
+	}
+	
 	@Test
 	public void testParseDouble() {
+		assertThat(Funcs.parseDouble().invoke("1")).isEqualTo(1d);
 		assertThat(Funcs.parseDouble().invoke("1.2")).isEqualTo(1.2);
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testParseDouble_Exception1() {
+		assertThat(Funcs.parseDouble().invoke(null));
+	}
+	
+	@Test(expected=NumberFormatException.class)
+	public void testParseDouble_Exception2() {
+		assertThat(Funcs.parseDouble().invoke(""));
+	}
+	
+	@Test(expected=NumberFormatException.class)
+	public void testParseDouble_Exception3() {
+		assertThat(Funcs.parseDouble().invoke("no_double"));
 	}
 	
 }
