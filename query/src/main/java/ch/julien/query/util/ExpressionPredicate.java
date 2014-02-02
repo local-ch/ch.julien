@@ -41,11 +41,23 @@ public class ExpressionPredicate<T> implements Predicate<T> {
 		return this.compiledPredicate.invoke(arg);
 	}
 	
+	private void addTokens(BinaryOperator op, Predicate<T> predicate) {
+		this.compiledPredicate = null;
+		this.expressionTokens.add(op);
+		this.expressionTokens.add(predicate);
+	}
+
+	private Predicate<T> compilePredicate() {
+		Stack<Object> stack = new Stack<Object>();
+		stack.addAll(getReversePolishNotation(this.expressionTokens));
+		return resolveReversePolishNotation(stack);
+	}
+	
 	private static interface Operator {
 		<T> void apply(Stack<Object> stack);
 	}
 	
-	private enum BinaryOperator implements Operator {
+	private static enum BinaryOperator implements Operator {
 		AND		(10) {
 			@SuppressWarnings("unchecked")
 			@Override public <T> void apply(Stack<Object> stack) {
@@ -69,16 +81,12 @@ public class ExpressionPredicate<T> implements Predicate<T> {
 		}
 	}
 	
-	private void addTokens(BinaryOperator op, Predicate<T> predicate) {
-		this.compiledPredicate = null;
-		this.expressionTokens.add(op);
-		this.expressionTokens.add(predicate);
-	}
-
-	private Predicate<T> compilePredicate() {
-		Stack<Object> stack = new Stack<Object>();
-		stack.addAll(getReversePolishNotation(this.expressionTokens));
-		return resolveReversePolishNotation(stack);
+	@SuppressWarnings("unchecked")
+	private static <T> Predicate<T> popPredicate(Stack<Object> stack) {
+		if ( ! (stack.peek() instanceof Predicate)) {
+			resolveReversePolishNotation(stack);
+		}
+		return (Predicate<T>) stack.pop();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -91,15 +99,7 @@ public class ExpressionPredicate<T> implements Predicate<T> {
 		return (Predicate<T>) stack.peek();
 	}
 
-	@SuppressWarnings("unchecked")
-	private static <T> Predicate<T> popPredicate(Stack<Object> stack) {
-		if ( ! (stack.peek() instanceof Predicate)) {
-			resolveReversePolishNotation(stack);
-		}
-		return (Predicate<T>) stack.pop();
-	}
-	
-	private List<Object> getReversePolishNotation(List<Object> input) {
+	private static List<Object> getReversePolishNotation(List<Object> input) {
 		// shunting yard algorithm (simplified)
 		Iterator<?> iterator = input.iterator();
 		List<Object> reversePolishNotation = Lists.newArrayList();

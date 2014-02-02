@@ -51,7 +51,7 @@ public class PredicatesTest {
 		map3.put("key", null);				// null value
 		assertThat(Predicates.notEmptyMap().invoke(map3)).isTrue();
 		Map<String, Object> map4 = new HashMap<String, Object>();
-		map4.put("key", "value");			// not null value
+		map4.put("key", "value");			// non null value
 		assertThat(Predicates.notEmptyMap().invoke(map4)).isTrue();
 		
 	}
@@ -64,7 +64,7 @@ public class PredicatesTest {
 		assertThat(Predicates.notEmptyArray().invoke(array1)).isFalse();
 		String[] array2 = {null};			// null element
 		assertThat(Predicates.notEmptyArray().invoke(array2)).isTrue();
-		String[] array3 = {"my-object"};	// not null element
+		String[] array3 = {"my-object"};	// non null element
 		assertThat(Predicates.notEmptyArray().invoke(array3)).isTrue();
 	}
 	
@@ -183,6 +183,10 @@ public class PredicatesTest {
 	
 	@Test
 	public void testStringMatching() {
+		assertThat(Predicates.stringMatching("").invoke("a")).isFalse();
+		assertThat(Predicates.stringMatching("a").invoke("ab")).isFalse();
+		assertThat(Predicates.stringMatching("a.*").invoke("ab")).isTrue();
+		
 		assertThat(Predicates.stringMatching("^.[ab]{1}$").invoke(null)).isFalse();
 		assertThat(Predicates.stringMatching("^.[ab]{1}$").invoke("")).isFalse();
 		assertThat(Predicates.stringMatching("^.[ab]{1}$").invoke("a")).isFalse();
@@ -190,10 +194,6 @@ public class PredicatesTest {
 		assertThat(Predicates.stringMatching("^.[ab]{1}$").invoke(" a ")).isFalse();
 		assertThat(Predicates.stringMatching("^.[ab]{1}$").invoke(" b")).isTrue();
 		assertThat(Predicates.stringMatching("^.[ab]{1}$").invoke(" c")).isFalse();
-		
-		assertThat(Predicates.stringMatching("a").invoke("ab")).isFalse();
-		assertThat(Predicates.stringMatching("a.*").invoke("ab")).isTrue();
-		assertThat(Predicates.stringMatching("").invoke("a")).isFalse();
 	}
 	
 	@Test(expected=NullPointerException.class)
