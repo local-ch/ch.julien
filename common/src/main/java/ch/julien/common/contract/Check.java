@@ -14,7 +14,18 @@ public class Check {
 
 		try {
 			if (object == null) {
-				throw type.getConstructor().newInstance(message);
+				T exception = null;
+				if (message != null) {
+					try {
+						exception = type.getConstructor(String.class).newInstance(message);
+					} catch (RuntimeException e) {
+						// type T can not handle message as a constructor
+						// argument - fall back to default behavior below
+					}
+				}
+				throw exception != null
+						? exception								// exception with message
+						: type.getConstructor().newInstance();	// fallback (message is null or constructor is missing)
 			}
 		} catch (RuntimeException e) {
 			throw e;
