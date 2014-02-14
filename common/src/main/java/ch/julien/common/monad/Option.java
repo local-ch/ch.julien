@@ -1,7 +1,5 @@
 package ch.julien.common.monad;
 
-import ch.julien.common.contract.Check;
-
 public abstract class Option<T> {
 	public static <T> Option<T> none() {
 		return new None<T>();
