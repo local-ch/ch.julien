@@ -732,21 +732,25 @@ public class TraversableImplTest {
 	@Test
 	public void testSkip() {
 		List<Integer> integers = asList(1, 2, 3, 4);
-
-		Iterable<Integer> actual = from(integers).skip(2);
-
-		assertThat(actual).containsExactly(3, 4);
+		
+		assertThat(from(integers).skip(-1)).containsExactly(1, 2, 3, 4);
+		assertThat(from(integers).skip(0)).containsExactly(1, 2, 3, 4);
+		assertThat(from(integers).skip(2)).containsExactly(3, 4);
+		assertThat(from(integers).skip(4)).isEmpty();
+		assertThat(from(integers).skip(5)).isEmpty();
 	}
 
 	@Test
 	public void testTake() {
 		List<Integer> integers = asList(1, 2, 3, 4);
 
-		Iterable<Integer> actual = from(integers).take(2);
-
-		assertThat(actual).containsExactly(1, 2);
+		assertThat(from(integers).take(-1)).isEmpty();;
+		assertThat(from(integers).take(0)).isEmpty();;
+		assertThat(from(integers).take(2)).containsExactly(1, 2);
+		assertThat(from(integers).take(4)).containsExactly(1, 2, 3, 4);
+		assertThat(from(integers).take(5)).containsExactly(1, 2, 3, 4);
 	}
-
+	
 	@Test
 	public void testSkipAndTakeAsSlice() {
 		List<Integer> integers = asList(1, 2, 3, 4, 5, 6);
