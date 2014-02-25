@@ -5,6 +5,7 @@ import ch.julien.query.Traversable;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
@@ -42,9 +43,17 @@ public class QueryTest {
 	}
 	
 	@Test
+	@SuppressWarnings("rawtypes")
 	public void testFromVarargs() {
 		assertThat(Query.from("s1")).containsExactly("s1");
 		assertThat(Query.from("s1", "s2")).containsExactly("s1", "s2");
+
+		List[] arrayOfIterables1 = { asList("s1") };
+		assertThat(Query.from(arrayOfIterables1)).containsExactly(asList("s1"));
+		List[] arrayOfIterables2 = { asList("s1"), asList("s2") };
+		assertThat(Query.from(arrayOfIterables2)).containsExactly(asList("s1"), asList("s2"));
+		List[] arrayOfIterables3 = { asList("s1", "s2") };
+		assertThat(Query.from(arrayOfIterables3)).containsExactly(asList("s1", "s2"));
 	}
 
 	@Test
