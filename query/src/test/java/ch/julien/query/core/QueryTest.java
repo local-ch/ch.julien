@@ -43,17 +43,34 @@ public class QueryTest {
 	}
 	
 	@Test
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void testFromVarargs() {
+		/*
+		 * 3 cases:
+		 * 1) params are varargs
+		 * 2) params is array treated as varargs
+		 * 3) param is iterable (precedence over varargs signature)
+		 */
+		
+		// (case 1) from( element ) --> [element]
 		assertThat(Query.from("s1")).containsExactly("s1");
+		
+		// (case 1) from( element1, element2, … ) --> [element1, element2, …]
 		assertThat(Query.from("s1", "s2")).containsExactly("s1", "s2");
-
-		List[] arrayOfIterables1 = { asList("s1") };
-		assertThat(Query.from(arrayOfIterables1)).containsExactly(asList("s1"));
-		List[] arrayOfIterables2 = { asList("s1"), asList("s2") };
-		assertThat(Query.from(arrayOfIterables2)).containsExactly(asList("s1"), asList("s2"));
-		List[] arrayOfIterables3 = { asList("s1", "s2") };
-		assertThat(Query.from(arrayOfIterables3)).containsExactly(asList("s1", "s2"));
+		
+		// (case 2) from( array_of_elements[] ) --> [element1, element2, …]
+		String[] arrayOfElements = {"s1", "s2"};
+		assertThat(Query.from(arrayOfElements)).containsExactly("s1", "s2");
+		
+		// (case 3) from( iterable ) --> [element1, element2, …]
+		assertThat(Query.from(asList("s1", "s2"))).containsExactly("s1", "s2");
+		
+		// (case 2) from( array_of_iterables[] ) --> [iterable1, iterable2, …]
+		List[] arrayOfIterables = { asList("s1") };
+		assertThat(Query.from(arrayOfIterables)).containsExactly(asList("s1"));
+		
+		// (case 1) from( iterable1, iterable2, ... ) --> [iterable1, iterable2, …]
+		assertThat(Query.from(asList("s1"), asList("s2"))).containsExactly(asList("s1"), asList("s2"));
 	}
 
 	@Test
