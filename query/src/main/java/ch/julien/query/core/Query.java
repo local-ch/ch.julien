@@ -19,35 +19,35 @@ public final class Query {
 		return new TraversableImpl<T>(array);
 	}
 
-	public static Traversable<Boolean> from(boolean[] array) {
+	public static Traversable<Boolean> from(boolean... array) {
 		return new BooleanArrayTraversable(array);
 	}
 
-	public static Traversable<Byte> from(byte[] array) {
+	public static Traversable<Byte> from(byte... array) {
 		return new ByteArrayTraversable(array);
 	}
 
-	public static Traversable<Character> from(char[] array) {
+	public static Traversable<Character> from(char... array) {
 		return new CharArrayTraversable(array);
 	}
 
-	public static Traversable<Double> from(double[] array) {
+	public static Traversable<Double> from(double... array) {
 		return new DoubleArrayTraversable(array);
 	}
 
-	public static Traversable<Float> from(float[] array) {
+	public static Traversable<Float> from(float... array) {
 		return new FloatArrayTraversable(array);
 	}
 
-	public static Traversable<Integer> from(int[] array) {
+	public static Traversable<Integer> from(int... array) {
 		return new IntArrayTraversable(array);
 	}
 
-	public static Traversable<Long> from(long[] array) {
+	public static Traversable<Long> from(long... array) {
 		return new LongArrayTraversable(array);
 	}
 
-	public static Traversable<Short> from(short[] array) {
+	public static Traversable<Short> from(short... array) {
 		return new ShortArrayTraversable(array);
 	}
 }
