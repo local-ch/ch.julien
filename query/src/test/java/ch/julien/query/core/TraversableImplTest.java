@@ -71,7 +71,7 @@ public class TraversableImplTest {
 	private TraversableImpl<Character> from(char[] source) {
 		return new CharArrayTraversable(source);
 	}
-	
+
 	@Test
 	public void testAggregate() {
 		List<Integer> integers = asList(1, 2, 3, 4);

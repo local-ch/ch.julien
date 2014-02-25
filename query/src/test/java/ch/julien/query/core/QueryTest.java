@@ -48,8 +48,8 @@ public class QueryTest {
 		/*
 		 * 3 cases:
 		 * 1) params are varargs
-		 * 2) params is array treated as varargs
-		 * 3) param is iterable (precedence over varargs signature)
+		 * 2) param is array treated as varargs
+		 * 3) param is iterable (precedence over varargs method signature (1) )
 		 */
 		
 		// (case 1) from( element ) --> [element]
@@ -65,12 +65,12 @@ public class QueryTest {
 		// (case 3) from( iterable ) --> [element1, element2, …]
 		assertThat(Query.from(asList("s1", "s2"))).containsExactly("s1", "s2");
 		
+		// (case 1) from( iterable1, iterable2, ... ) --> [iterable1, iterable2, …]
+		assertThat(Query.from(asList("s1"), asList("s2"))).containsExactly(asList("s1"), asList("s2"));
+		
 		// (case 2) from( array_of_iterables[] ) --> [iterable1, iterable2, …]
 		List[] arrayOfIterables = { asList("s1") };
 		assertThat(Query.from(arrayOfIterables)).containsExactly(asList("s1"));
-		
-		// (case 1) from( iterable1, iterable2, ... ) --> [iterable1, iterable2, …]
-		assertThat(Query.from(asList("s1"), asList("s2"))).containsExactly(asList("s1"), asList("s2"));
 	}
 
 	@Test
