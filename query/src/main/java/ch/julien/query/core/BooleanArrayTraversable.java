@@ -36,7 +36,7 @@ class BooleanArrayTraversable extends TraversableImpl<Boolean> {
 		}
 	}
 
-	public BooleanArrayTraversable(final boolean... source) {
+	public BooleanArrayTraversable(final boolean[] source) {
 		super(
 			new TraversableImpl<Boolean>(
 				new Iterable<Boolean>() {

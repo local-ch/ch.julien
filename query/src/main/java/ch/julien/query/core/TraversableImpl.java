@@ -23,7 +23,7 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 		this.source = source;
 	}
 
-	public TraversableImpl(final TSource... source) {
+	public TraversableImpl(final TSource[] source) {
 		this.source = new TraversableImpl<TSource>(
 			new Iterable<TSource>() {
 				@Override

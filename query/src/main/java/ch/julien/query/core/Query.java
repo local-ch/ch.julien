@@ -15,7 +15,7 @@ public final class Query {
 		return new TraversableImpl<Map.Entry<TKey, TElement>>(map.entrySet());
 	}
 
-	public static <T> Traversable<T> from(T[] array) {
+	public static <T> Traversable<T> from(T... array) {
 		return new TraversableImpl<T>(array);
 	}
 

@@ -36,7 +36,7 @@ class DoubleArrayTraversable extends TraversableImpl<Double> {
 		}
 	}
 
-	public DoubleArrayTraversable(final double... source) {
+	public DoubleArrayTraversable(final double[] source) {
 		super(
 			new TraversableImpl<Double>(
 				new Iterable<Double>() {

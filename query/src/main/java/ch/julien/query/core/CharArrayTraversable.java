@@ -36,7 +36,7 @@ class CharArrayTraversable extends TraversableImpl<Character> {
 		}
 	}
 
-	public CharArrayTraversable(final char... source) {
+	public CharArrayTraversable(final char[] source) {
 		super(
 			new TraversableImpl<Character>(
 				new Iterable<Character>() {

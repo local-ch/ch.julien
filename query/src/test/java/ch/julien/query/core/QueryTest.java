@@ -40,6 +40,12 @@ public class QueryTest {
 
 		assertThat(actual).containsExactly(1, 2);
 	}
+	
+	@Test
+	public void testFromVarargs() {
+		assertThat(Query.from("s1")).containsExactly("s1");
+		assertThat(Query.from("s1", "s2")).containsExactly("s1", "s2");
+	}
 
 	@Test
 	public void testFromPrimitiveBooleanArray() {
