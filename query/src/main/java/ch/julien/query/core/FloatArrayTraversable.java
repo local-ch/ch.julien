@@ -36,7 +36,7 @@ class FloatArrayTraversable extends TraversableImpl<Float> {
 		}
 	}
 
-	public FloatArrayTraversable(final float[] source) {
+	public FloatArrayTraversable(final float... source) {
 		super(
 			new TraversableImpl<Float>(
 				new Iterable<Float>() {

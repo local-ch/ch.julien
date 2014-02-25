@@ -36,7 +36,7 @@ class ShortArrayTraversable extends TraversableImpl<Short> {
 		}
 	}
 
-	public ShortArrayTraversable(final short[] source) {
+	public ShortArrayTraversable(final short... source) {
 		super(
 			new TraversableImpl<Short>(
 				new Iterable<Short>() {

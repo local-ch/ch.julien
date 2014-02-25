@@ -36,7 +36,7 @@ class IntArrayTraversable extends TraversableImpl<Integer> {
 		}
 	}
 
-	public IntArrayTraversable(final int[] source) {
+	public IntArrayTraversable(final int... source) {
 		super(
 			new TraversableImpl<Integer>(
 				new Iterable<Integer>() {

@@ -23,7 +23,7 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 		this.source = source;
 	}
 
-	public TraversableImpl(final TSource[] source) {
+	public TraversableImpl(final TSource... source) {
 		this.source = new TraversableImpl<TSource>(
 			new Iterable<TSource>() {
 				@Override
@@ -277,7 +277,7 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 	}
 
 	@Override
-	public Traversable<TSource> concat(final TSource[] appendant) {
+	public Traversable<TSource> concat(final TSource... appendant) {
 		return concat(
 			new TraversableImpl<TSource>(appendant)
 		);
@@ -606,7 +606,7 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 	}
 
 	@Override
-	public Traversable<TSource> union(TSource[] appendant) {
+	public Traversable<TSource> union(TSource... appendant) {
 		return union(new TraversableImpl<TSource>(appendant));
 	}
 

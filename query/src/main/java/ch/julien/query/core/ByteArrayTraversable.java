@@ -36,7 +36,7 @@ class ByteArrayTraversable extends TraversableImpl<Byte> {
 		}
 	}
 
-	public ByteArrayTraversable(final byte[] source) {
+	public ByteArrayTraversable(final byte... source) {
 		super(
 			new TraversableImpl<Byte>(
 				new Iterable<Byte>() {

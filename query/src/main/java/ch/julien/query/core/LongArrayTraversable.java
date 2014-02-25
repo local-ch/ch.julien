@@ -36,7 +36,7 @@ class LongArrayTraversable extends TraversableImpl<Long> {
 		}
 	}
 
-	public LongArrayTraversable(final long[] source) {
+	public LongArrayTraversable(final long... source) {
 		super(
 			new TraversableImpl<Long>(
 				new Iterable<Long>() {

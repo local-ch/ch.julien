@@ -71,6 +71,26 @@ public class TraversableImplTest {
 	private TraversableImpl<Character> from(char[] source) {
 		return new CharArrayTraversable(source);
 	}
+	
+	@Test
+	public void testTraversableConstructorWithArray() {
+		String[] array1 = {"01"};
+		TraversableImpl<String> actual1 = new TraversableImpl<String>(array1);
+		assertThat(actual1).containsExactly("01");
+		
+		String[] array2 = {"01", "02"};
+		TraversableImpl<String> actual2 = new TraversableImpl<String>(array2);
+		assertThat(actual2).containsExactly("01", "02");
+	}
+	
+	@Test
+	public void testTraversableConstructorWithVarargs() {
+		TraversableImpl<String> actual1 = new TraversableImpl<String>("01");
+		assertThat(actual1).containsExactly("01");
+
+		TraversableImpl<String> actual2 = new TraversableImpl<String>("01", "02");
+		assertThat(actual2).containsExactly("01", "02");
+	}
 
 	@Test
 	public void testAggregate() {
@@ -339,6 +359,15 @@ public class TraversableImplTest {
 		Integer[] second = {3, 4};
 
 		Iterable<Integer> actual = from(first).concat(second);
+
+		assertThat(actual).containsExactly(1, 2, 3, 4);
+	}
+	
+	@Test
+	public void testConcatVarargs() {
+		List<Integer> first = asList(1, 2);
+
+		Iterable<Integer> actual = from(first).concat(3, 4);
 
 		assertThat(actual).containsExactly(1, 2, 3, 4);
 	}
