@@ -1,5 +1,9 @@
 package ch.julien.query.util;
 
+import java.lang.reflect.Array;
+
+import ch.julien.query.Traversable;
+
 import ch.julien.common.delegate.Func;
 
 
@@ -72,6 +76,22 @@ public class Funcs {
 			@Override
 			public Double invoke(String arg) {
 				return Double.parseDouble(arg);
+			}
+		};
+	}
+	
+	/**
+	 * Array allocator as required for {@link Traversable#asArray(Func)}
+	 * 
+	 * @param clazz
+	 *            The generic type of the array to allocate
+	 */
+	public static final <T> Func<Integer, T[]> allocator(final Class<T> clazz) {
+		return new Func<Integer, T[]>() {
+			@Override
+			@SuppressWarnings("unchecked")
+			public T[] invoke(Integer arg) {
+				return (T[]) Array.newInstance(clazz, arg);
 			}
 		};
 	}

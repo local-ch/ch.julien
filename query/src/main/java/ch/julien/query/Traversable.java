@@ -6,6 +6,8 @@ import ch.julien.common.monad.Option;
 
 import java.util.*;
 
+import ch.julien.query.util.Funcs;
+
 public interface Traversable<T> extends Iterable<T> {
 	T aggregate(Accumulator<T, T> accumulator);
 	<TAccumulate> TAccumulate aggregate(TAccumulate initial, Accumulator<TAccumulate, T> accumulator);
@@ -17,6 +19,7 @@ public interface Traversable<T> extends Iterable<T> {
 	boolean any();
 	boolean any(Predicate<? super T> predicate);
 
+	/** @see Funcs#allocator(Class) */
 	T[] asArray(Func<Integer, T[]> allocator);
 
 	ArrayList<T> asArrayList();
