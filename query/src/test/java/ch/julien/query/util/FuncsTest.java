@@ -152,9 +152,4 @@ public class FuncsTest {
 		assertThat(Funcs.parseDouble().invoke("no_double"));
 	}
 	
-	@Test
-	public void testAllocator() {
-		assertThat(Funcs.allocator(String.class).invoke(3)).isEqualTo(new String[3]);
-	}
-	
 }

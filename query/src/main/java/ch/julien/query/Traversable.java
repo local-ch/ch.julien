@@ -1,12 +1,22 @@
 package ch.julien.query;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+
 import ch.julien.common.datastructure.Tuple;
-import ch.julien.common.delegate.*;
+import ch.julien.common.delegate.Accumulator;
+import ch.julien.common.delegate.Action;
+import ch.julien.common.delegate.EqualityComparator;
+import ch.julien.common.delegate.Func;
+import ch.julien.common.delegate.Predicate;
 import ch.julien.common.monad.Option;
-
-import java.util.*;
-
-import ch.julien.query.util.Funcs;
+import ch.julien.query.util.ArrayUtils;
 
 public interface Traversable<T> extends Iterable<T> {
 	T aggregate(Accumulator<T, T> accumulator);
@@ -19,7 +29,7 @@ public interface Traversable<T> extends Iterable<T> {
 	boolean any();
 	boolean any(Predicate<? super T> predicate);
 
-	/** @see Funcs#allocator(Class) */
+	/** @see ArrayUtils#arrayFactory(Class) */
 	T[] asArray(Func<Integer, T[]> allocator);
 
 	ArrayList<T> asArrayList();
