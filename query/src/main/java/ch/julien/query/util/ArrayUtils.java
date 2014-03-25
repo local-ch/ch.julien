@@ -8,7 +8,13 @@ import ch.julien.query.Traversable;
 public class ArrayUtils {
 
 	/**
-	 * 1D-Array allocator as required for {@link Traversable#asArray(Func)}
+	 * Array allocator as required for {@link Traversable#asArray(Func)}.
+	 * <p/>
+	 * <pre>
+	 * ArrayUtils.arrayFactory(String.class);		// facory for 1D String arrays: String[]
+	 * ArrayUtils.arrayFactory(String[].class);	// facory for 2D String arrays: String[][]
+	 * // etc...
+	 * </pre>
 	 * 
 	 * @param clazz
 	 *            The generic type of the array to allocate
