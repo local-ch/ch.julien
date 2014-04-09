@@ -123,12 +123,37 @@ public class FuncsTest {
 	
 	@Test(expected=NumberFormatException.class)
 	public void testParseInteger_Exception3() {
-		assertThat(Funcs.parseInteger().invoke("no_integer"));
+		assertThat(Funcs.parseInteger().invoke("not_an_integer"));
 	}
 	
 	@Test(expected=NumberFormatException.class)
 	public void testParseInteger_Exception4() {
 		assertThat(Funcs.parseInteger().invoke("1.2"));
+	}
+	
+	@Test
+	public void testParseLong() {
+		assertThat(Funcs.parseLong().invoke("1")).isEqualTo(1);
+	}
+	
+	@Test(expected=NumberFormatException.class)
+	public void testParseLong_Exception1() {
+		assertThat(Funcs.parseLong().invoke(null));
+	}
+	
+	@Test(expected=NumberFormatException.class)
+	public void testParseLong_Exception2() {
+		assertThat(Funcs.parseLong().invoke(""));
+	}
+	
+	@Test(expected=NumberFormatException.class)
+	public void testParseLong_Exception3() {
+		assertThat(Funcs.parseLong().invoke("not_a_long"));
+	}
+	
+	@Test(expected=NumberFormatException.class)
+	public void testParseLong_Exception4() {
+		assertThat(Funcs.parseLong().invoke("1.2"));
 	}
 	
 	@Test

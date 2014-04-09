@@ -63,6 +63,20 @@ public class Funcs {
 	}
 	
 	/**
+	 * Parse the element to a {@link Long}
+	 * 
+	 * @see Long#parseLong(String)
+	 */
+	public static final Func<String, Long> parseLong() {
+		return new Func<String, Long>() {
+			@Override
+			public Long invoke(String arg) {
+				return Long.parseLong(arg);
+			}
+		};
+	}
+	
+	/**
 	 * Parse the element to a {@link Double}
 	 * 
 	 * @see Double#parseDouble(String)
