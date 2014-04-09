@@ -107,6 +107,22 @@ public class FuncsTest {
 	}
 	
 	@Test
+	public void testToStringRepresentation() {
+		final String string = "string";
+		assertThat(Funcs.toStringRepresentation().invoke(new Object() {
+			@Override
+			public String toString() {
+				return string;
+			}
+		})).isEqualTo(string);
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testToStringRepresentation_Exception1() {
+		Funcs.toStringRepresentation().invoke(null);
+	}
+	
+	@Test
 	public void testParseInteger() {
 		assertThat(Funcs.parseInteger().invoke("1")).isEqualTo(1);
 	}

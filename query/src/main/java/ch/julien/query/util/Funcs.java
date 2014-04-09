@@ -49,6 +49,20 @@ public class Funcs {
 	}
 	
 	/**
+	 * To string
+	 * 
+	 * @see Object#toString()
+	 */
+	public static final Func<Object, String> toStringRepresentation() {
+		return new Func<Object, String>() {
+			@Override
+			public String invoke(Object arg) {
+				return arg.toString();
+			}
+		};
+	}
+	
+	/**
 	 * Parse the element to an {@link Integer}
 	 * 
 	 * @see Integer#parseInt(String)
