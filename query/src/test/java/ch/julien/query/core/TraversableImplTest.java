@@ -1,5 +1,25 @@
 package ch.julien.query.core;
 
+import static java.util.Arrays.asList;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.entry;
+import static org.fest.assertions.api.Assertions.fail;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.junit.Test;
+
 import ch.julien.common.datastructure.Tuple;
 import ch.julien.common.delegate.Accumulator;
 import ch.julien.common.delegate.EqualityComparator;
@@ -7,15 +27,8 @@ import ch.julien.common.delegate.Func;
 import ch.julien.common.delegate.Predicate;
 import ch.julien.common.monad.Option;
 
-import org.junit.Test;
-
-import java.util.*;
-
-import static java.util.Arrays.asList;
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.fest.assertions.api.Assertions.entry;
-
 public class TraversableImplTest {
+
 	private static class Person {
 		public static Person withFirstAndLastName(String firstName, String lastName) {
 			return new Person(firstName, lastName);
@@ -742,15 +755,43 @@ public class TraversableImplTest {
 
 	@Test
 	public void testTake() {
+		// test the output
 		List<Integer> integers = asList(1, 2, 3, 4);
 
-		assertThat(from(integers).take(-1)).isEmpty();;
-		assertThat(from(integers).take(0)).isEmpty();;
+		assertThat(from(integers).take(-1)).isEmpty();
+		assertThat(from(integers).take(0)).isEmpty();
 		assertThat(from(integers).take(2)).containsExactly(1, 2);
 		assertThat(from(integers).take(4)).containsExactly(1, 2, 3, 4);
 		assertThat(from(integers).take(5)).containsExactly(1, 2, 3, 4);
+
+		// test the algorithm
+		Iterable<Object> iterable = new ArrayList<Object>(asList(1, 2, 3, 4));
+		Iterable<Object> iterableSpy = spy(iterable);
+		Iterator<Object> iteratorSpy;
+		when(iterableSpy.iterator()).thenReturn(iteratorSpy = spy(wrap(iterable.iterator())));
+
+		assertThat(from(iterableSpy).take(2).asArrayList()).containsExactly(1, 2);
+		verify(iterableSpy, times(1)).iterator();
+		verify(iteratorSpy, times(2)).next();
 	}
-	
+
+	private <T> Iterator<T> wrap(final Iterator<T> iterator) {
+		return new Iterator<T>() {
+			@Override
+			public boolean hasNext() {
+				return iterator.hasNext();
+			}
+			@Override
+			public T next() {
+				return iterator.next();
+			}
+			@Override
+			public void remove() {
+				iterator.remove();
+			}
+		};
+	}
+
 	@Test
 	public void testSkipAndTakeAsSlice() {
 		List<Integer> integers = asList(1, 2, 3, 4, 5, 6);
@@ -998,5 +1039,63 @@ public class TraversableImplTest {
 			new Tuple<Integer, String>(null, "e"),
 			new Tuple<Integer, String>(null, "f")
 		);
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	public void testPermute() {
+		// test the output
+		List<Integer> a = asList(1, 2, 3);
+		List<String> b = asList("a", "b");
+
+		assertThat(from(a).permute(b)).containsExactly(
+			new Tuple<Integer, String>(1, "a"),
+			new Tuple<Integer, String>(1, "b"),
+			new Tuple<Integer, String>(2, "a"),
+			new Tuple<Integer, String>(2, "b"),
+			new Tuple<Integer, String>(3, "a"),
+			new Tuple<Integer, String>(3, "b")
+		);
+
+		// test the algorithm
+		Iterable<Object> iterableSpy1 = spy(new ArrayList<Object>(asList(1, 2)));
+		Iterable<Object> iterableSpy2 = spy(new ArrayList<Object>(asList(1, 2, 3)));
+
+		assertThat(from(iterableSpy1).permute(iterableSpy2).asArrayList()).containsExactly(
+			new Tuple<Object, Object>(1, 1),
+			new Tuple<Object, Object>(1, 2),
+			new Tuple<Object, Object>(1, 3),
+			new Tuple<Object, Object>(2, 1),
+			new Tuple<Object, Object>(2, 2),
+			new Tuple<Object, Object>(2, 3)
+		);
+		verify(iterableSpy1, times(1)).iterator();
+		verify(iterableSpy2, times(1)).iterator();
+	}
+
+	@Test
+	public void testPermute_empty() {
+		List<Object> regular = asList(new Object());
+		List<Object> empty = new ArrayList<Object>();
+		List<Object> nul = null;
+
+		assertThat(from(empty).permute(regular)).isEmpty();
+		assertThat(from(regular).permute(empty)).isEmpty();
+		assertThat(from(empty).permute(empty)).isEmpty();
+
+		testPermute_IllegalArgumentException(regular, nul);
+		testPermute_IllegalArgumentException(empty, nul);
+		testPermute_IllegalArgumentException(nul, nul);
+		testPermute_IllegalArgumentException(nul, empty);
+		testPermute_IllegalArgumentException(nul, regular);
+	}
+
+	private void testPermute_IllegalArgumentException(Iterable<Object> source, Iterable<Object> other) {
+		try {
+			from(source).permute(other);
+		} catch (IllegalArgumentException e) {
+			return;
+		}
+		fail("IllegalArgumentException expected");
 	}
 }

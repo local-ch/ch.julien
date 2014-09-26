@@ -1,14 +1,31 @@
 package ch.julien.query.core;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Stack;
+
 import ch.julien.common.contract.Check;
 import ch.julien.common.datastructure.Tuple;
-import ch.julien.common.delegate.*;
+import ch.julien.common.delegate.Accumulator;
+import ch.julien.common.delegate.Action;
+import ch.julien.common.delegate.EqualityComparator;
+import ch.julien.common.delegate.Func;
+import ch.julien.common.delegate.Predicate;
 import ch.julien.common.monad.Indexed;
 import ch.julien.common.monad.Option;
 import ch.julien.query.OrderedTraversable;
 import ch.julien.query.Traversable;
-
-import java.util.*;
 
 class TraversableImpl<TSource> implements Traversable<TSource> {
 	protected final Iterable<TSource> source;
@@ -559,11 +576,11 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 
 	@Override
 	public Traversable<TSource> take(final long count) {
-		return indexedSelect(
-			new Predicate<Indexed<TSource>>() {
+		return new TraversableImpl<TSource>(
+			new Iterable<TSource>() {
 				@Override
-				public boolean invoke(Indexed<TSource> arg) {
-					return arg.getIndex() < count;
+				public Iterator<TSource> iterator() {
+					return new TakeIterator<TSource>(source.iterator(), count);
 				}
 			}
 		);
@@ -612,6 +629,8 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 
 	@Override
 	public <TSourceOther> Traversable<Tuple<TSource, TSourceOther>> zip(final Iterable<TSourceOther> other) {
+		Check.notNull(other, "other");
+
 		return new TraversableImpl<Tuple<TSource, TSourceOther>>(
 			new Iterable<Tuple<TSource, TSourceOther>>() {
 				@Override
@@ -624,11 +643,27 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 
 	@Override
 	public <TSourceOther> Traversable<Tuple<TSource, TSourceOther>> zipAll(final Iterable<TSourceOther> other) {
+		Check.notNull(other, "other");
+
 		return new TraversableImpl<Tuple<TSource, TSourceOther>>(
 			new Iterable<Tuple<TSource, TSourceOther>>() {
 				@Override
 				public Iterator<Tuple<TSource, TSourceOther>> iterator() {
 					return new ZipAllIterator<TSource, TSourceOther>(source.iterator(), other.iterator());
+				}
+			}
+		);
+	}
+
+	@Override
+	public <TSourceOther> Traversable<Tuple<TSource, TSourceOther>> permute(final Iterable<TSourceOther> other) {
+		Check.notNull(other, "other");
+
+		return new TraversableImpl<Tuple<TSource, TSourceOther>>(
+			new Iterable<Tuple<TSource, TSourceOther>>() {
+				@Override
+				public Iterator<Tuple<TSource, TSourceOther>> iterator() {
+					return new PermutationIterator<TSource, TSourceOther>(source.iterator(), other.iterator());
 				}
 			}
 		);
