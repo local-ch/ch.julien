@@ -1,16 +1,16 @@
 package ch.julien.common.monad;
 
 public class Indexed<T> {
-	private final int index;
+	private final long index;
 	private final T value;
 
 
-	public Indexed(int index, T value) {
+	public Indexed(long index, T value) {
 		this.index = index;
 		this.value = value;
 	}
 
-	public int getIndex() {
+	public long getIndex() {
 		return this.index;
 	}
 

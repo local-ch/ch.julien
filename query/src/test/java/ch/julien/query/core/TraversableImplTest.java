@@ -1,5 +1,22 @@
 package ch.julien.query.core;
 
+import static java.util.Arrays.asList;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.entry;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import org.fest.util.Lists;
+import org.junit.Test;
+
 import ch.julien.common.datastructure.Tuple;
 import ch.julien.common.delegate.Accumulator;
 import ch.julien.common.delegate.EqualityComparator;
@@ -7,15 +24,8 @@ import ch.julien.common.delegate.Func;
 import ch.julien.common.delegate.Predicate;
 import ch.julien.common.monad.Option;
 
-import org.junit.Test;
-
-import java.util.*;
-
-import static java.util.Arrays.asList;
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.fest.assertions.api.Assertions.entry;
-
 public class TraversableImplTest {
+
 	private static class Person {
 		public static Person withFirstAndLastName(String firstName, String lastName) {
 			return new Person(firstName, lastName);
@@ -740,17 +750,68 @@ public class TraversableImplTest {
 		assertThat(from(integers).skip(5)).isEmpty();
 	}
 
+	static class SpyingIterable implements Iterable<Integer> {
+		private final int size;
+		private List<SpyingIterator> iterators = Lists.newArrayList();
+
+		public SpyingIterable(int size) {
+			this.size = size;
+		}
+
+		@Override
+		public Iterator<Integer> iterator() {
+			SpyingIterator iterator = new SpyingIterator(size);
+			iterators.add(iterator);
+			return iterator;
+		}
+
+		static class SpyingIterator implements Iterator<Integer> {
+			private final int size;
+			private int nextIndex = 0;
+
+			public SpyingIterator(int size) {
+				this.size = Math.max(size, 0);
+			}
+
+			@Override
+			public boolean hasNext() {
+				return nextIndex < size;
+			}
+
+			@Override
+			public Integer next() {
+				if (!hasNext()) {
+					throw new NoSuchElementException();
+				}
+				return ++nextIndex;
+			}
+
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}
+		}
+	}
+
 	@Test
 	public void testTake() {
+		// test the output
 		List<Integer> integers = asList(1, 2, 3, 4);
 
-		assertThat(from(integers).take(-1)).isEmpty();;
-		assertThat(from(integers).take(0)).isEmpty();;
+		assertThat(from(integers).take(-1)).isEmpty();
+		assertThat(from(integers).take(0)).isEmpty();
 		assertThat(from(integers).take(2)).containsExactly(1, 2);
 		assertThat(from(integers).take(4)).containsExactly(1, 2, 3, 4);
 		assertThat(from(integers).take(5)).containsExactly(1, 2, 3, 4);
+
+		// test the algorithm
+		SpyingIterable spy = new SpyingIterable(10);
+
+		assertThat(from(spy).take(2)).containsOnly(1, 2);
+		assertThat(spy.iterators).hasSize(1);						// only 1 iterator was created
+		assertThat(spy.iterators.get(0).nextIndex).isEqualTo(2);	// only 2 elements were retrieved from iterator
 	}
-	
+
 	@Test
 	public void testSkipAndTakeAsSlice() {
 		List<Integer> integers = asList(1, 2, 3, 4, 5, 6);

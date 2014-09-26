@@ -1,11 +1,15 @@
 package ch.julien.query.core;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+
 import ch.julien.common.contract.Check;
 import ch.julien.common.delegate.Func;
 import ch.julien.common.monad.Indexed;
 import ch.julien.query.OrderedTraversable;
-
-import java.util.*;
 
 class OrderedTraversableImpl<TSource, TKey> extends TraversableImpl<TSource> implements OrderedTraversable<TSource, TKey> {
 	private final List<Comparator<TSource>> comparators;
@@ -91,7 +95,7 @@ class OrderedTraversableImpl<TSource, TKey> extends TraversableImpl<TSource> imp
 		public Iterator<TSource> iterator() {
 			List<Indexed<TSource>> items = new ArrayList<Indexed<TSource>>();
 
-			int index = 0;
+			long index = 0;
 			for (TSource item : this.source) {
 				items.add(new Indexed<TSource>(index++, item));
 			}
@@ -108,7 +112,7 @@ class OrderedTraversableImpl<TSource, TKey> extends TraversableImpl<TSource> imp
 							}
 						}
 
-						return Integer.valueOf(a.getIndex()).compareTo(b.getIndex());
+						return Long.valueOf(a.getIndex()).compareTo(b.getIndex());
 					}
 				}
 			);
