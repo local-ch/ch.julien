@@ -3,6 +3,7 @@ package ch.julien.query.core;
 import static java.util.Arrays.asList;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.api.Assertions.entry;
+import static org.fest.assertions.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +15,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.fest.util.Lists;
 import org.junit.Test;
 
 import ch.julien.common.datastructure.Tuple;
@@ -752,7 +752,7 @@ public class TraversableImplTest {
 
 	static class SpyingIterable implements Iterable<Integer> {
 		private final int size;
-		private List<SpyingIterator> iterators = Lists.newArrayList();
+		private List<SpyingIterator> iterators = new ArrayList();
 
 		public SpyingIterable(int size) {
 			this.size = size;
@@ -761,7 +761,7 @@ public class TraversableImplTest {
 		@Override
 		public Iterator<Integer> iterator() {
 			SpyingIterator iterator = new SpyingIterator(size);
-			iterators.add(iterator);
+			this.iterators.add(iterator);
 			return iterator;
 		}
 
@@ -775,7 +775,7 @@ public class TraversableImplTest {
 
 			@Override
 			public boolean hasNext() {
-				return nextIndex < size;
+				return this.nextIndex < size;
 			}
 
 			@Override
@@ -783,7 +783,7 @@ public class TraversableImplTest {
 				if (!hasNext()) {
 					throw new NoSuchElementException();
 				}
-				return ++nextIndex;
+				return ++this.nextIndex;
 			}
 
 			@Override
@@ -807,7 +807,7 @@ public class TraversableImplTest {
 		// test the algorithm
 		SpyingIterable spy = new SpyingIterable(10);
 
-		assertThat(from(spy).take(2)).containsOnly(1, 2);
+		assertThat(from(spy).take(2).asArrayList()).containsExactly(1, 2);
 		assertThat(spy.iterators).hasSize(1);						// only 1 iterator was created
 		assertThat(spy.iterators.get(0).nextIndex).isEqualTo(2);	// only 2 elements were retrieved from iterator
 	}
@@ -1059,5 +1059,65 @@ public class TraversableImplTest {
 			new Tuple<Integer, String>(null, "e"),
 			new Tuple<Integer, String>(null, "f")
 		);
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	public void testPermute() {
+		// test the output
+		List<Integer> a = asList(1, 2, 3);
+		List<String> b = asList("a", "b");
+
+		assertThat(from(a).permute(b)).containsExactly(
+			new Tuple<Integer, String>(1, "a"),
+			new Tuple<Integer, String>(1, "b"),
+			new Tuple<Integer, String>(2, "a"),
+			new Tuple<Integer, String>(2, "b"),
+			new Tuple<Integer, String>(3, "a"),
+			new Tuple<Integer, String>(3, "b")
+		);
+
+		// test the algorithm
+		SpyingIterable spy1 = new SpyingIterable(2);
+		SpyingIterable spy2 = new SpyingIterable(3);
+
+		assertThat(from(spy1).permute(spy2).asArrayList()).containsExactly(
+			new Tuple<Integer, Integer>(1, 1),
+			new Tuple<Integer, Integer>(1, 2),
+			new Tuple<Integer, Integer>(1, 3),
+			new Tuple<Integer, Integer>(2, 1),
+			new Tuple<Integer, Integer>(2, 2),
+			new Tuple<Integer, Integer>(2, 3)
+		);
+		assertThat(spy1.iterators).hasSize(1);						// only 1 iterator was created
+		assertThat(spy1.iterators.get(0).nextIndex).isEqualTo(2);	// only 2 elements were retrieved from iterator
+		assertThat(spy2.iterators).hasSize(1);						// only 1 iterator was created
+		assertThat(spy2.iterators.get(0).nextIndex).isEqualTo(3);	// only 3 elements were retrieved from iterator
+	}
+
+	@Test
+	public void testPermute_empty() {
+		List<Object> regular = asList(new Object());
+		List<Object> empty = new ArrayList();
+		List<Object> nul = null;
+
+		assertThat(from(empty).permute(regular)).isEmpty();
+		assertThat(from(regular).permute(empty)).isEmpty();
+		assertThat(from(empty).permute(empty)).isEmpty();
+
+		testPermute_IllegalArgumentException(regular, nul);
+		testPermute_IllegalArgumentException(empty, nul);
+		testPermute_IllegalArgumentException(nul, nul);
+		testPermute_IllegalArgumentException(nul, empty);
+		testPermute_IllegalArgumentException(nul, regular);
+	}
+
+	private void testPermute_IllegalArgumentException(Iterable<Object> source, Iterable<Object> other) {
+		try {
+			from(source).permute(other);
+		} catch (IllegalArgumentException e) {
+			return;
+		}
+		fail("IllegalArgumentException expected");
 	}
 }
