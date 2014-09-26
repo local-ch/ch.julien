@@ -1090,9 +1090,7 @@ public class TraversableImplTest {
 			new Tuple<Integer, Integer>(2, 3)
 		);
 		assertThat(spy1.iterators).hasSize(1);						// only 1 iterator was created
-		assertThat(spy1.iterators.get(0).nextIndex).isEqualTo(2);	// only 2 elements were retrieved from iterator
 		assertThat(spy2.iterators).hasSize(1);						// only 1 iterator was created
-		assertThat(spy2.iterators.get(0).nextIndex).isEqualTo(3);	// only 3 elements were retrieved from iterator
 	}
 
 	@Test
