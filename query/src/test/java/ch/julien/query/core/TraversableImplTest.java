@@ -4,6 +4,10 @@ import static java.util.Arrays.asList;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.api.Assertions.entry;
 import static org.fest.assertions.api.Assertions.fail;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +17,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.junit.Test;
 
@@ -750,49 +753,6 @@ public class TraversableImplTest {
 		assertThat(from(integers).skip(5)).isEmpty();
 	}
 
-	static class SpyingIterable implements Iterable<Integer> {
-		private final int size;
-		private List<SpyingIterator> iterators = new ArrayList();
-
-		public SpyingIterable(int size) {
-			this.size = size;
-		}
-
-		@Override
-		public Iterator<Integer> iterator() {
-			SpyingIterator iterator = new SpyingIterator(size);
-			this.iterators.add(iterator);
-			return iterator;
-		}
-
-		static class SpyingIterator implements Iterator<Integer> {
-			private final int size;
-			private int nextIndex = 0;
-
-			public SpyingIterator(int size) {
-				this.size = Math.max(size, 0);
-			}
-
-			@Override
-			public boolean hasNext() {
-				return this.nextIndex < size;
-			}
-
-			@Override
-			public Integer next() {
-				if (!hasNext()) {
-					throw new NoSuchElementException();
-				}
-				return ++this.nextIndex;
-			}
-
-			@Override
-			public void remove() {
-				throw new UnsupportedOperationException();
-			}
-		}
-	}
-
 	@Test
 	public void testTake() {
 		// test the output
@@ -805,11 +765,31 @@ public class TraversableImplTest {
 		assertThat(from(integers).take(5)).containsExactly(1, 2, 3, 4);
 
 		// test the algorithm
-		SpyingIterable spy = new SpyingIterable(10);
+		final Iterable<Object> underlying = new ArrayList<Object>(asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+		Iterable<Object> iterableSpy = spy(underlying);
+		Iterator<Object> iteratorSpy;
+		when(iterableSpy.iterator()).thenReturn(iteratorSpy = spy(wrap(underlying.iterator())));
 
-		assertThat(from(spy).take(2).asArrayList()).containsExactly(1, 2);
-		assertThat(spy.iterators).hasSize(1);						// only 1 iterator was created
-		assertThat(spy.iterators.get(0).nextIndex).isEqualTo(2);	// only 2 elements were retrieved from iterator
+		assertThat(from(iterableSpy).take(2).asArrayList()).containsExactly(1, 2);
+		verify(iterableSpy, times(1)).iterator();
+		verify(iteratorSpy, times(2)).next();
+	}
+
+	private Iterator<Object> wrap(final Iterator<Object> iterator) {
+		return new Iterator<Object>() {
+			@Override
+			public boolean hasNext() {
+				return iterator.hasNext();
+			}
+			@Override
+			public Object next() {
+				return iterator.next();
+			}
+			@Override
+			public void remove() {
+				iterator.remove();
+			}
+		};
 	}
 
 	@Test
@@ -1078,25 +1058,25 @@ public class TraversableImplTest {
 		);
 
 		// test the algorithm
-		SpyingIterable spy1 = new SpyingIterable(2);
-		SpyingIterable spy2 = new SpyingIterable(3);
+		Iterable<Object> iterableSpy1 = spy(new ArrayList<Object>(asList(1, 2)));
+		Iterable<Object> iterableSpy2 = spy(new ArrayList<Object>(asList(1, 2, 3)));
 
-		assertThat(from(spy1).permute(spy2).asArrayList()).containsExactly(
-			new Tuple<Integer, Integer>(1, 1),
-			new Tuple<Integer, Integer>(1, 2),
-			new Tuple<Integer, Integer>(1, 3),
-			new Tuple<Integer, Integer>(2, 1),
-			new Tuple<Integer, Integer>(2, 2),
-			new Tuple<Integer, Integer>(2, 3)
+		assertThat(from(iterableSpy1).permute(iterableSpy2).asArrayList()).containsExactly(
+			new Tuple<Object, Object>(1, 1),
+			new Tuple<Object, Object>(1, 2),
+			new Tuple<Object, Object>(1, 3),
+			new Tuple<Object, Object>(2, 1),
+			new Tuple<Object, Object>(2, 2),
+			new Tuple<Object, Object>(2, 3)
 		);
-		assertThat(spy1.iterators).hasSize(1);						// only 1 iterator was created
-		assertThat(spy2.iterators).hasSize(1);						// only 1 iterator was created
+		verify(iterableSpy1, times(1)).iterator();
+		verify(iterableSpy2, times(1)).iterator();
 	}
 
 	@Test
 	public void testPermute_empty() {
 		List<Object> regular = asList(new Object());
-		List<Object> empty = new ArrayList();
+		List<Object> empty = new ArrayList<Object>();
 		List<Object> nul = null;
 
 		assertThat(from(empty).permute(regular)).isEmpty();
