@@ -1,10 +1,9 @@
 package ch.julien.query.util;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
-
-import org.fest.util.Lists;
 
 import ch.julien.common.delegate.Predicate;
 
@@ -17,7 +16,7 @@ public class ExpressionPredicate<T> implements Predicate<T> {
 	
 	/** Compiled version of this expression predicate */
 	private Predicate<T> compiledPredicate = null;
-	private List<Object> expressionTokens = Lists.newArrayList();
+	private List<Object> expressionTokens = new ArrayList();
 	
 	public ExpressionPredicate(Predicate<T> predicate) {
 		this.expressionTokens.add(predicate);
@@ -102,7 +101,7 @@ public class ExpressionPredicate<T> implements Predicate<T> {
 	private static List<Object> getReversePolishNotation(List<Object> input) {
 		// shunting yard algorithm (simplified)
 		Iterator<?> iterator = input.iterator();
-		List<Object> reversePolishNotation = Lists.newArrayList();
+		List<Object> reversePolishNotation = new ArrayList();
 		Stack<BinaryOperator> stack = new Stack<BinaryOperator>();
 		while (iterator.hasNext()) {
 			Object next = (Object) iterator.next();

@@ -1,9 +1,8 @@
 package ch.julien.query.core;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.fest.util.Lists;
 
 import ch.julien.common.contract.Check;
 import ch.julien.common.datastructure.Tuple;
@@ -14,7 +13,7 @@ import ch.julien.common.datastructure.Tuple;
 public class PermutationIterator<TSource, TSourceOther> extends AbstractIterator<TSource, Tuple<TSource, TSourceOther>> {
 	private TSource nextElement = null;
 	private boolean isCacheComplete = false;
-	private final List<TSourceOther> cachedOtherElements = Lists.newArrayList();
+	private final List<TSourceOther> cachedOtherElements = new ArrayList();
 	private Iterator<TSourceOther> otherIterator;
 
 
