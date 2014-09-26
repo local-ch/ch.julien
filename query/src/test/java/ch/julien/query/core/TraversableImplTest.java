@@ -765,24 +765,24 @@ public class TraversableImplTest {
 		assertThat(from(integers).take(5)).containsExactly(1, 2, 3, 4);
 
 		// test the algorithm
-		final Iterable<Object> underlying = new ArrayList<Object>(asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
-		Iterable<Object> iterableSpy = spy(underlying);
+		Iterable<Object> iterable = new ArrayList<Object>(asList(1, 2, 3, 4));
+		Iterable<Object> iterableSpy = spy(iterable);
 		Iterator<Object> iteratorSpy;
-		when(iterableSpy.iterator()).thenReturn(iteratorSpy = spy(wrap(underlying.iterator())));
+		when(iterableSpy.iterator()).thenReturn(iteratorSpy = spy(wrap(iterable.iterator())));
 
 		assertThat(from(iterableSpy).take(2).asArrayList()).containsExactly(1, 2);
 		verify(iterableSpy, times(1)).iterator();
 		verify(iteratorSpy, times(2)).next();
 	}
 
-	private Iterator<Object> wrap(final Iterator<Object> iterator) {
-		return new Iterator<Object>() {
+	private <T> Iterator<T> wrap(final Iterator<T> iterator) {
+		return new Iterator<T>() {
 			@Override
 			public boolean hasNext() {
 				return iterator.hasNext();
 			}
 			@Override
-			public Object next() {
+			public T next() {
 				return iterator.next();
 			}
 			@Override
