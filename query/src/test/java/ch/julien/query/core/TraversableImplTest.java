@@ -745,7 +745,7 @@ public class TraversableImplTest {
 	@Test
 	public void testSkip() {
 		List<Integer> integers = asList(1, 2, 3, 4);
-		
+
 		assertThat(from(integers).skip(-1)).containsExactly(1, 2, 3, 4);
 		assertThat(from(integers).skip(0)).containsExactly(1, 2, 3, 4);
 		assertThat(from(integers).skip(2)).containsExactly(3, 4);
@@ -1043,12 +1043,12 @@ public class TraversableImplTest {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void testPermute() {
+	public void testCombine() {
 		// test the output
 		List<Integer> a = asList(1, 2, 3);
 		List<String> b = asList("a", "b");
 
-		assertThat(from(a).permute(b)).containsExactly(
+		assertThat(from(a).combine(b)).containsExactly(
 			new Tuple<Integer, String>(1, "a"),
 			new Tuple<Integer, String>(1, "b"),
 			new Tuple<Integer, String>(2, "a"),
@@ -1061,7 +1061,7 @@ public class TraversableImplTest {
 		Iterable<Object> iterableSpy1 = spy(new ArrayList<Object>(asList(1, 2)));
 		Iterable<Object> iterableSpy2 = spy(new ArrayList<Object>(asList(1, 2, 3)));
 
-		assertThat(from(iterableSpy1).permute(iterableSpy2).asArrayList()).containsExactly(
+		assertThat(from(iterableSpy1).combine(iterableSpy2).asArrayList()).containsExactly(
 			new Tuple<Object, Object>(1, 1),
 			new Tuple<Object, Object>(1, 2),
 			new Tuple<Object, Object>(1, 3),
@@ -1074,25 +1074,25 @@ public class TraversableImplTest {
 	}
 
 	@Test
-	public void testPermute_empty() {
+	public void testCombine_empty() {
 		List<Object> regular = asList(new Object());
 		List<Object> empty = new ArrayList<Object>();
 		List<Object> nul = null;
 
-		assertThat(from(empty).permute(regular)).isEmpty();
-		assertThat(from(regular).permute(empty)).isEmpty();
-		assertThat(from(empty).permute(empty)).isEmpty();
+		assertThat(from(empty).combine(regular)).isEmpty();
+		assertThat(from(regular).combine(empty)).isEmpty();
+		assertThat(from(empty).combine(empty)).isEmpty();
 
-		testPermute_IllegalArgumentException(regular, nul);
-		testPermute_IllegalArgumentException(empty, nul);
-		testPermute_IllegalArgumentException(nul, nul);
-		testPermute_IllegalArgumentException(nul, empty);
-		testPermute_IllegalArgumentException(nul, regular);
+		testCombine_IllegalArgumentException(regular, nul);
+		testCombine_IllegalArgumentException(empty, nul);
+		testCombine_IllegalArgumentException(nul, nul);
+		testCombine_IllegalArgumentException(nul, empty);
+		testCombine_IllegalArgumentException(nul, regular);
 	}
 
-	private void testPermute_IllegalArgumentException(Iterable<Object> source, Iterable<Object> other) {
+	private void testCombine_IllegalArgumentException(Iterable<Object> source, Iterable<Object> other) {
 		try {
-			from(source).permute(other);
+			from(source).combine(other);
 		} catch (IllegalArgumentException e) {
 			return;
 		}

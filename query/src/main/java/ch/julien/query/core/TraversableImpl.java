@@ -656,14 +656,14 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 	}
 
 	@Override
-	public <TSourceOther> Traversable<Tuple<TSource, TSourceOther>> permute(final Iterable<TSourceOther> other) {
+	public <TSourceOther> Traversable<Tuple<TSource, TSourceOther>> combine(final Iterable<TSourceOther> other) {
 		Check.notNull(other, "other");
 
 		return new TraversableImpl<Tuple<TSource, TSourceOther>>(
 			new Iterable<Tuple<TSource, TSourceOther>>() {
 				@Override
 				public Iterator<Tuple<TSource, TSourceOther>> iterator() {
-					return new PermutationIterator<TSource, TSourceOther>(source.iterator(), other.iterator());
+					return new CombinationIterator<TSource, TSourceOther>(source.iterator(), other.iterator());
 				}
 			}
 		);

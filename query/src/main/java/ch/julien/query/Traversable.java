@@ -94,5 +94,5 @@ public interface Traversable<T> extends Iterable<T> {
 	<TOther> Traversable<Tuple<T, TOther>> zip(Iterable<TOther> other);
 	<TOther> Traversable<Tuple<T, TOther>> zipAll(Iterable<TOther> other);
 
-	<TOther> Traversable<Tuple<T, TOther>> permute(Iterable<TOther> other);
+	<TOther> Traversable<Tuple<T, TOther>> combine(Iterable<TOther> other);
 }

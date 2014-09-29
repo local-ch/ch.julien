@@ -10,14 +10,14 @@ import ch.julien.common.datastructure.Tuple;
 /**
  * Created by michaelkuechler on 26.09.14.
  */
-public class PermutationIterator<TSource, TSourceOther> extends AbstractIterator<TSource, Tuple<TSource, TSourceOther>> {
+public class CombinationIterator<TSource, TSourceOther> extends AbstractIterator<TSource, Tuple<TSource, TSourceOther>> {
 	private TSource nextElement = null;
-	private boolean isCacheComplete = false;
+	private boolean isOtherElementsCacheComplete = false;
 	private final List<TSourceOther> cachedOtherElements = new ArrayList();
 	private Iterator<TSourceOther> otherIterator;
 
 
-	public PermutationIterator(Iterator<? extends TSource> parent, Iterator<TSourceOther> otherIterator) {
+	public CombinationIterator(Iterator<? extends TSource> parent, Iterator<TSourceOther> otherIterator) {
 		super(parent);
 
 		Check.notNull(otherIterator, "otherIterator");
@@ -31,7 +31,7 @@ public class PermutationIterator<TSource, TSourceOther> extends AbstractIterator
 			// reinitialize inner loop
 			this.nextElement = null;
 			this.otherIterator = this.cachedOtherElements.iterator();
-			this.isCacheComplete = true;
+			this.isOtherElementsCacheComplete = true;
 		}
 
 		// outer loop
@@ -46,7 +46,7 @@ public class PermutationIterator<TSource, TSourceOther> extends AbstractIterator
 		// inner loop
 		if (this.otherIterator.hasNext()) {
 			TSourceOther nextOtherElement = this.otherIterator.next();
-			if ( ! this.isCacheComplete) {
+			if ( ! this.isOtherElementsCacheComplete) {
 				this.cachedOtherElements.add(nextOtherElement);
 			}
 			return new Tuple<TSource, TSourceOther>(this.nextElement, nextOtherElement);
