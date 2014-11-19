@@ -7,7 +7,7 @@ import ch.julien.common.delegate.Func;
  * Common {@link Func} implementations for convenience
  */
 public class Funcs {
-	
+
 	/**
 	 * Cast the element to <code>clazz</code>
 	 */
@@ -19,10 +19,10 @@ public class Funcs {
 			}
 		};
 	}
-	
+
 	/**
 	 * Replace all matches for the <code>regex</code> with a <code>replacement</code>
-	 * 
+	 *
 	 * @see String#replaceAll(String, String)
 	 */
 	public static final Func<String, String> replaceAll(final String regex, final String replacement) {
@@ -33,10 +33,10 @@ public class Funcs {
 			}
 		};
 	}
-	
+
 	/**
 	 * Trim the string
-	 * 
+	 *
 	 * @see String#trim()
 	 */
 	public static final Func<String, String> trimString() {
@@ -47,10 +47,10 @@ public class Funcs {
 			}
 		};
 	}
-	
+
 	/**
 	 * To string
-	 * 
+	 *
 	 * @see Object#toString()
 	 */
 	public static final Func<Object, String> toStringRepresentation() {
@@ -61,10 +61,10 @@ public class Funcs {
 			}
 		};
 	}
-	
+
 	/**
 	 * Parse the element to an {@link Integer}
-	 * 
+	 *
 	 * @see Integer#parseInt(String)
 	 */
 	public static final Func<String, Integer> parseInteger() {
@@ -75,10 +75,10 @@ public class Funcs {
 			}
 		};
 	}
-	
+
 	/**
 	 * Parse the element to a {@link Long}
-	 * 
+	 *
 	 * @see Long#parseLong(String)
 	 */
 	public static final Func<String, Long> parseLong() {
@@ -89,10 +89,10 @@ public class Funcs {
 			}
 		};
 	}
-	
+
 	/**
 	 * Parse the element to a {@link Double}
-	 * 
+	 *
 	 * @see Double#parseDouble(String)
 	 */
 	public static final Func<String, Double> parseDouble() {
@@ -103,5 +103,17 @@ public class Funcs {
 			}
 		};
 	}
-	
+
+	/**
+	 * The unmodified element
+	 */
+	public static final <T> Func<T, T> self() {
+		return new Func<T, T>() {
+			@Override
+			public T invoke(T arg) {
+				return arg;
+			}
+		};
+	}
+
 }
