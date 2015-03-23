@@ -15,11 +15,11 @@ public class ArrayUtils {
 	 * ArrayUtils.arrayFactory(String[].class);	// facory for 2D String arrays: String[][]
 	 * // etc...
 	 * </pre>
-	 * 
+	 *
 	 * @param clazz
 	 *            The generic type of the array to allocate
 	 */
-	public static final <T> Func<Integer, T[]> arrayFactory(final Class<T> clazz) {
+	public static <T> Func<Integer, T[]> arrayFactory(final Class<T> clazz) {
 		return new Func<Integer, T[]>() {
 			@Override
 			@SuppressWarnings("unchecked")
@@ -28,5 +28,5 @@ public class ArrayUtils {
 			}
 		};
 	}
-	
+
 }

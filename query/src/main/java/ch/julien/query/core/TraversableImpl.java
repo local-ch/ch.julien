@@ -26,6 +26,7 @@ import ch.julien.common.monad.Indexed;
 import ch.julien.common.monad.Option;
 import ch.julien.query.OrderedTraversable;
 import ch.julien.query.Traversable;
+import ch.julien.query.util.ArrayUtils;
 
 class TraversableImpl<TSource> implements Traversable<TSource> {
 	protected final Iterable<TSource> source;
@@ -124,6 +125,11 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 	@Override
 	public boolean any(Predicate<? super TSource> predicate) {
 		return select(predicate).any();
+	}
+
+	@Override
+	public TSource[] asArray(Class<TSource> clazz) {
+		return asArray(ArrayUtils.arrayFactory(clazz));
 	}
 
 	@Override
