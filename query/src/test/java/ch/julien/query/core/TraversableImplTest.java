@@ -9,6 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -219,6 +220,18 @@ public class TraversableImplTest {
 		);
 
 		assertThat(actual).isFalse();
+	}
+
+	@Test
+	public void testAsArray_AutoFactory() {
+		List<Integer[]> integers = asList(
+			new Integer[] {1, 2},
+			new Integer[] {3, 4}
+		);
+
+		Integer[][] actual = from(integers).asArray(Integer[].class);
+
+		assertThat(actual).containsExactly(new Integer[] {1, 2}, new Integer[] {3, 4});
 	}
 
 	@Test

@@ -29,6 +29,7 @@ public interface Traversable<T> extends Iterable<T> {
 	boolean any();
 	boolean any(Predicate<? super T> predicate);
 
+	T[] asArray(Class<T> clazz);
 	/** @see ArrayUtils#arrayFactory(Class) */
 	T[] asArray(Func<Integer, T[]> allocator);
 
