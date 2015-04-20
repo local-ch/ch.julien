@@ -384,6 +384,7 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 	}
 
 	@Override
+	@SuppressWarnings("LoopStatementThatDoesntLoop")
 	public Option<TSource> first() {
 		if (this.source instanceof List) {
 			List<TSource> list = (List<TSource>)this.source;

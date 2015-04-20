@@ -9,14 +9,14 @@ import ch.julien.query.core.Query;
 
 
 /**
- * Common {@link Predicate} implementations for convenience 
+ * Common {@link Predicate} implementations for convenience
  */
 public class Predicates {
-	
+
 	/**
 	 * Select if element is not <code>null</code>
 	 */
-	public static final Predicate<Object> notNull() {
+	public static Predicate<Object> notNull() {
 		return new Predicate<Object>() {
 			@Override
 			public boolean invoke(Object arg) {
@@ -24,13 +24,13 @@ public class Predicates {
 			}
 		};
 	}
-	
+
 	/**
 	 * Select if collection is not empty (nor <code>null</code>)
-	 * 
+	 *
 	 * @see Collection#isEmpty()
 	 */
-	public static final Predicate<Collection<?>> notEmptyCollection() {
+	public static Predicate<Collection<?>> notEmptyCollection() {
 		return new Predicate<Collection<?>>() {
 			@Override
 			public boolean invoke(Collection<?> arg) {
@@ -38,13 +38,13 @@ public class Predicates {
 			}
 		};
 	}
-	
+
 	/**
 	 * Select if map is not empty (nor <code>null</code>)
-	 * 
+	 *
 	 * @see Map#isEmpty()
 	 */
-	public static final Predicate<Map<?, ?>> notEmptyMap() {
+	public static Predicate<Map<?, ?>> notEmptyMap() {
 		return new Predicate<Map<?,?>>() {
 			@Override
 			public boolean invoke(Map<?, ?> arg) {
@@ -52,11 +52,11 @@ public class Predicates {
 			}
 		};
 	}
-	
+
 	/**
 	 * Select if array is not empty (nor <code>null</code>)
 	 */
-	public static final <T> Predicate<T[]> notEmptyArray() {
+	public static <T> Predicate<T[]> notEmptyArray() {
 		return new Predicate<T[]>() {
 			@Override
 			public boolean invoke(T[] arg) {
@@ -64,13 +64,13 @@ public class Predicates {
 			}
 		};
 	}
-	
+
 	/**
 	 * Select if element is instance of <code>clazz</code>
-	 * 
+	 *
 	 * @see Class#isInstance(Object)
 	 */
-	public static final Predicate<Object> elementOfInstance(final Class<?> clazz) {
+	public static Predicate<Object> elementOfInstance(final Class<?> clazz) {
 		return new Predicate<Object>() {
 			@Override
 			public boolean invoke(Object arg) {
@@ -78,13 +78,13 @@ public class Predicates {
 			}
 		};
 	}
-	
+
 	/**
 	 * Select if class (element) is assignable from <code>clazz</code> (nor <code>null</code>)
-	 * 
+	 *
 	 * @see Class#isAssignableFrom(Class)
 	 */
-	public static final Predicate<Class<?>> elementAssignableFrom(final Class<?> clazz) {
+	public static Predicate<Class<?>> elementAssignableFrom(final Class<?> clazz) {
 		return new Predicate<Class<?>>() {
 			@Override
 			public boolean invoke(Class<?> arg) {
@@ -92,18 +92,18 @@ public class Predicates {
 			}
 		};
 	}
-	
+
 	/**
-	 * Create {@link ExpressionPredicate} for the <code>predicate</code> 
+	 * Create {@link ExpressionPredicate} for the <code>predicate</code>
 	 */
-	public static final <T> ExpressionPredicate<T> that(final Predicate<T> predicate) {
+	public static <T> ExpressionPredicate<T> that(final Predicate<T> predicate) {
 		return new ExpressionPredicate<T>(predicate);
 	}
-	
+
 	/**
 	 * Select if element is not selected by the <code>predicate</code>
 	 */
-	public static final <T> Predicate<T> not(final Predicate<T> predicate) {
+	public static <T> Predicate<T> not(final Predicate<T> predicate) {
 		return new Predicate<T>() {
 			@Override
 			public boolean invoke(T arg) {
@@ -115,11 +115,12 @@ public class Predicates {
 			}
 		};
 	}
-	
+
 	/**
 	 * Select if element is selected by all <code>predicates</code>
 	 */
-	public static final <T> Predicate<T> and(final Predicate<T>... predicates) {
+	@SafeVarargs
+	public static <T> Predicate<T> and(final Predicate<T>... predicates) {
 		return new Predicate<T>() {
 			@Override
 			public boolean invoke(T arg) {
@@ -136,11 +137,12 @@ public class Predicates {
 			}
 		};
 	}
-	
+
 	/**
-	 * Select if element is selected by one or more of the <code>predicates</code> 
+	 * Select if element is selected by one or more of the <code>predicates</code>
 	 */
-	public static final <T> Predicate<T> or(final Predicate<T>... predicates) {
+	@SafeVarargs
+	public static <T> Predicate<T> or(final Predicate<T>... predicates) {
 		return new Predicate<T>() {
 			@Override
 			public boolean invoke(T arg) {
@@ -157,11 +159,12 @@ public class Predicates {
 			}
 		};
 	}
-	
+
 	/**
 	 * Select if element is selected by exactly one of the <code>predicates</code>
 	 */
-	public static final <T> Predicate<T> xor(final Predicate<T>... predicates) {
+	@SafeVarargs
+	public static <T> Predicate<T> xor(final Predicate<T>... predicates) {
 		return new Predicate<T>() {
 			@Override
 			public boolean invoke(final T arg) {
@@ -178,13 +181,13 @@ public class Predicates {
 			}
 		};
 	}
-	
+
 	/**
 	 * Select if string is not empty (nor <code>null</code>)
-	 * 
+	 *
 	 * @see String#isEmpty()
 	 */
-	public static final Predicate<String> notEmptyString() {
+	public static Predicate<String> notEmptyString() {
 		return new Predicate<String>() {
 			@Override
 			public boolean invoke(String arg) {
@@ -192,13 +195,13 @@ public class Predicates {
 			}
 		};
 	}
-	
+
 	/**
 	 * Select if string starts with <code>prefix</code> (and is not <code>null</code>)
-	 * 
+	 *
 	 * @see String#startsWith(String)
 	 */
-	public static final Predicate<String> stringStartingWith(final String prefix) {
+	public static Predicate<String> stringStartingWith(final String prefix) {
 		return new Predicate<String>() {
 			@Override
 			public boolean invoke(String arg) {
@@ -206,13 +209,13 @@ public class Predicates {
 			}
 		};
 	}
-	
+
 	/**
 	 * Select if string ends with <code>suffix</code> (and is not <code>null</code>)
-	 * 
+	 *
 	 * @see String#endsWith(String)
 	 */
-	public static final Predicate<String> stringEndingWith(final String suffix) {
+	public static Predicate<String> stringEndingWith(final String suffix) {
 		return new Predicate<String>() {
 			@Override
 			public boolean invoke(String arg) {
@@ -220,13 +223,13 @@ public class Predicates {
 			}
 		};
 	}
-	
+
 	/**
 	 * Select if string is matching the <code>regex</code> (and is not <code>null</code>)
-	 * 
+	 *
 	 * @see String#matches(String)
 	 */
-	public static final Predicate<String> stringMatching(final String regex) {
+	public static Predicate<String> stringMatching(final String regex) {
 		return new Predicate<String>() {
 			@Override
 			public boolean invoke(String arg) {
@@ -234,15 +237,11 @@ public class Predicates {
 			}
 		};
 	}
-	
-	/*
-	 * Predicates only useful for testing
-	 */
-	
+
 	/**
 	 * Always select element
 	 */
-	static final Predicate<Object> all() {
+	public static Predicate<Object> all() {
 		return new Predicate<Object>() {
 			@Override
 			public boolean invoke(Object arg) {
@@ -258,7 +257,7 @@ public class Predicates {
 	/**
 	 * Never select element
 	 */
-	static final Predicate<Object> none() {
+	public static Predicate<Object> none() {
 		return new Predicate<Object>() {
 			@Override
 			public boolean invoke(Object arg) {
@@ -270,5 +269,5 @@ public class Predicates {
 			}
 		};
 	}
-	
+
 }

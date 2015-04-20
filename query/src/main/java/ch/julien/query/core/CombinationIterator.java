@@ -7,13 +7,10 @@ import java.util.List;
 import ch.julien.common.contract.Check;
 import ch.julien.common.datastructure.Tuple;
 
-/**
- * Created by michaelkuechler on 26.09.14.
- */
 public class CombinationIterator<TSource, TSourceOther> extends AbstractIterator<TSource, Tuple<TSource, TSourceOther>> {
 	private TSource nextElement = null;
 	private boolean isOtherElementsCacheComplete = false;
-	private final List<TSourceOther> cachedOtherElements = new ArrayList();
+	private final List<TSourceOther> cachedOtherElements = new ArrayList<TSourceOther>();
 	private Iterator<TSourceOther> otherIterator;
 
 

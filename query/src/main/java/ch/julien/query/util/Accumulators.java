@@ -2,16 +2,15 @@ package ch.julien.query.util;
 
 import ch.julien.common.delegate.Accumulator;
 
-
 /**
- * Common {@link Accumulator} implementations for convenience 
+ * Common {@link Accumulator} implementations for convenience
  */
 public class Accumulators {
 
 	/**
-	 * Append the strings to each other separated by <code>separator</code> 
+	 * Append the strings to each other separated by <code>separator</code>
 	 */
-	public static final Accumulator <String, String> joinOn(String separator) {
+	public static Accumulator <String, String> joinOn(String separator) {
 		final String _separator = (separator == null || separator.isEmpty()
 				? ", "	// default separator
 				: separator
@@ -22,11 +21,11 @@ public class Accumulators {
 			}
 		};
 	}
-	
+
 	/**
 	 * Sum up the numbers (elements)
 	 */
-	public static final <T extends Number> Accumulator<T, T> sum() {
+	public static <T extends Number> Accumulator<T, T> sum() {
 		return new Accumulator<T, T>() {
 			@SuppressWarnings("unchecked")
 			@Override public T accumulate(T accumulate, T source) {
@@ -48,11 +47,11 @@ public class Accumulators {
 			}
 		};
 	}
-	
+
 	/**
 	 * Build the product of the numbers (elements)
 	 */
-	public static final <T extends Number> Accumulator<T, T> product() {
+	public static <T extends Number> Accumulator<T, T> product() {
 		return new Accumulator<T, T>() {
 			@SuppressWarnings("unchecked")
 			@Override public T accumulate(T accumulate, T source) {
@@ -74,5 +73,5 @@ public class Accumulators {
 			}
 		};
 	}
-	
+
 }
