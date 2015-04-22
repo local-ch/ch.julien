@@ -241,10 +241,10 @@ public class Predicates {
 	/**
 	 * Always select element
 	 */
-	public static Predicate<Object> all() {
-		return new Predicate<Object>() {
+	public static <T> Predicate<T> all() {
+		return new Predicate<T>() {
 			@Override
-			public boolean invoke(Object arg) {
+			public boolean invoke(T arg) {
 				return true;
 			}
 			@Override
@@ -257,10 +257,10 @@ public class Predicates {
 	/**
 	 * Never select element
 	 */
-	public static Predicate<Object> none() {
-		return new Predicate<Object>() {
+	public static <T> Predicate<T> none() {
+		return new Predicate<T>() {
 			@Override
-			public boolean invoke(Object arg) {
+			public boolean invoke(T arg) {
 				return false;
 			}
 			@Override
