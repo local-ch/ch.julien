@@ -1,8 +1,8 @@
 package ch.julien.common.monad;
 
-import org.junit.Test;
-
 import static org.fest.assertions.api.Assertions.assertThat;
+
+import org.junit.Test;
 
 public class OptionTest {
 	@Test
@@ -31,6 +31,14 @@ public class OptionTest {
 		Option<Boolean> actual = Option.none();
 
 		actual.get();
+	}
+
+	@Test
+	public void testFromNullable() {
+		Option<Boolean> some = Option.fromNullable(true);
+		assertThat(some.hasValue()).isTrue();
+		assertThat(some.get()).isTrue();
+		assertThat(Option.fromNullable(null).hasValue()).isFalse();
 	}
 
 	@Test

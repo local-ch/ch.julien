@@ -9,6 +9,13 @@ public abstract class Option<T> {
 		return new Some<T>(value);
 	}
 
+	/**
+	 * @return Same as {@code Option.some(value)} if {@code value} is not {@code null}, {@code Option.none()} otherwise.
+	 */
+	public static <T> Option<T> fromNullable(T value) {
+		return value == null ? Option.<T>none() : some(value);
+	}
+
 	private Option() {}
 
 	public abstract Boolean hasValue();
