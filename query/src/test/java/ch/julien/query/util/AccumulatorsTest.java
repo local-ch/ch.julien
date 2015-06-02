@@ -21,7 +21,7 @@ public class AccumulatorsTest {
 		assertThat(Accumulators.joinOn(" ").accumulate("a", "b")).isEqualTo("a b");
 		assertThat(Accumulators.joinOn(" , ").accumulate("a", "b")).isEqualTo("a , b");
 	}
-	
+
 	@Test
 	public void testSum() {
 		// test supported number types
@@ -32,7 +32,7 @@ public class AccumulatorsTest {
 		assertThat(Accumulators.<Long>sum().accumulate(2l, 3l)).isEqualTo(5l);
 		assertThat(Accumulators.<Short>sum().accumulate((short)2, (short)3)).isEqualTo((short)5);
 	}
-	
+
 	@Test
 	public void testSum_unsupportedTypes() {
 		List<Number> unsupportedInputs = Arrays.asList(
@@ -52,11 +52,11 @@ public class AccumulatorsTest {
 			}
 		}
 	}
-	
+
 	private <T extends Number> void _testSum_unsupportedTypes(T input) {
 		Accumulators.<T>sum().accumulate(input, input);
 	}
-	
+
 	@Test
 	public void testProduct() {
 		// test supported number types
@@ -67,7 +67,7 @@ public class AccumulatorsTest {
 		assertThat(Accumulators.<Long>product().accumulate(2l, 3l)).isEqualTo(6l);
 		assertThat(Accumulators.<Short>product().accumulate((short)2, (short)3)).isEqualTo((short)6);
 	}
-	
+
 	@Test
 	public void testProduct_unsupportedTypes() {
 		List<Number> unsupportedInputs = Arrays.asList(
@@ -87,9 +87,18 @@ public class AccumulatorsTest {
 			}
 		}
 	}
-	
+
 	private <T extends Number> void _testProduct_unsupportedTypes(T input) {
 		Accumulators.<T>product().accumulate(input, input);
 	}
-	
+
+	@Test
+	public void intersection() {
+		assertThat(Accumulators.<Integer>intersection().accumulate(Arrays.asList(1), Arrays.asList(2))).isEmpty();
+		assertThat(Accumulators.<Integer>intersection().accumulate(Arrays.asList(1), Arrays.<Integer>asList())).isEmpty();
+		assertThat(Accumulators.<Integer>intersection().accumulate(Arrays.<Integer>asList(), Arrays.asList(2))).isEmpty();
+		assertThat(Accumulators.<Integer>intersection().accumulate(Arrays.asList(1, 2), Arrays.asList(2))).containsExactly(2);
+		assertThat(Accumulators.<Integer>intersection().accumulate(Arrays.asList(1), Arrays.asList(1, 2))).containsExactly(1);
+		assertThat(Accumulators.<Integer>intersection().accumulate(Arrays.asList(2, 1), Arrays.asList(1, 2))).containsExactly(2, 1);
+	}
 }

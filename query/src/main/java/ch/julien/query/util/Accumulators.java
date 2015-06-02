@@ -1,6 +1,7 @@
 package ch.julien.query.util;
 
 import ch.julien.common.delegate.Accumulator;
+import ch.julien.query.core.Query;
 
 /**
  * Common {@link Accumulator} implementations for convenience
@@ -74,4 +75,15 @@ public class Accumulators {
 		};
 	}
 
+	/**
+	 * Build the intersection, i.e. the elements that contained in all Iterables
+	 */
+	public static <T> Accumulator<Iterable<T>, Iterable<T>> intersection() {
+		return new Accumulator<Iterable<T>, Iterable<T>>() {
+			@Override
+			public Iterable<T> accumulate(Iterable<T> arg0, Iterable<T> arg1) {
+				return Query.from(arg0).intersect(arg1).asArrayList();
+			}
+		};
+	}
 }
