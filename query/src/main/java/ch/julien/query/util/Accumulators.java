@@ -76,7 +76,19 @@ public class Accumulators {
 	}
 
 	/**
-	 * Build the intersection, i.e. the elements that contained in all Iterables
+	 * Build the union, i.e. a distinct concatenation of all Iterables
+	 */
+	public static <T> Accumulator<Iterable<T>, Iterable<T>> union() {
+		return new Accumulator<Iterable<T>, Iterable<T>>() {
+			@Override
+			public Iterable<T> accumulate(Iterable<T> arg0, Iterable<T> arg1) {
+				return Query.from(arg0).concat(arg1).distinct().asArrayList();
+			}
+		};
+	}
+
+	/**
+	 * Build the intersection, i.e. the distinct elements that are contained in all Iterables
 	 */
 	public static <T> Accumulator<Iterable<T>, Iterable<T>> intersection() {
 		return new Accumulator<Iterable<T>, Iterable<T>>() {

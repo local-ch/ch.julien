@@ -93,12 +93,26 @@ public class AccumulatorsTest {
 	}
 
 	@Test
-	public void intersection() {
-		assertThat(Accumulators.<Integer>intersection().accumulate(Arrays.asList(1), Arrays.asList(2))).isEmpty();
+	public void testUnion() {
+		assertThat(Accumulators.<Integer>union().accumulate(Arrays.<Integer>asList(), Arrays.<Integer>asList())).isEmpty();
+		assertThat(Accumulators.<Integer>union().accumulate(Arrays.asList(1), Arrays.<Integer>asList())).containsExactly(1);
+		assertThat(Accumulators.<Integer>union().accumulate(Arrays.<Integer>asList(), Arrays.asList(2))).containsExactly(2);
+		assertThat(Accumulators.<Integer>union().accumulate(Arrays.asList(1), Arrays.asList(2))).containsExactly(1, 2);
+		assertThat(Accumulators.<Integer>union().accumulate(Arrays.asList(1), Arrays.asList(1, 2))).containsExactly(1, 2);
+		assertThat(Accumulators.<Integer>union().accumulate(Arrays.asList(1, 2), Arrays.asList(2))).containsExactly(1, 2);
+		assertThat(Accumulators.<Integer>union().accumulate(Arrays.asList(2, 1), Arrays.asList(1, 2))).containsExactly(2, 1);
+		assertThat(Accumulators.<Integer>union().accumulate(Arrays.asList(1, 1), Arrays.asList(1, 1, 2, 2))).containsExactly(1, 2);
+	}
+
+	@Test
+	public void testIntersection() {
+		assertThat(Accumulators.<Integer>intersection().accumulate(Arrays.<Integer>asList(), Arrays.<Integer>asList())).isEmpty();
 		assertThat(Accumulators.<Integer>intersection().accumulate(Arrays.asList(1), Arrays.<Integer>asList())).isEmpty();
 		assertThat(Accumulators.<Integer>intersection().accumulate(Arrays.<Integer>asList(), Arrays.asList(2))).isEmpty();
-		assertThat(Accumulators.<Integer>intersection().accumulate(Arrays.asList(1, 2), Arrays.asList(2))).containsExactly(2);
+		assertThat(Accumulators.<Integer>intersection().accumulate(Arrays.asList(1), Arrays.asList(2))).isEmpty();
 		assertThat(Accumulators.<Integer>intersection().accumulate(Arrays.asList(1), Arrays.asList(1, 2))).containsExactly(1);
+		assertThat(Accumulators.<Integer>intersection().accumulate(Arrays.asList(1, 2), Arrays.asList(2))).containsExactly(2);
 		assertThat(Accumulators.<Integer>intersection().accumulate(Arrays.asList(2, 1), Arrays.asList(1, 2))).containsExactly(2, 1);
+		assertThat(Accumulators.<Integer>intersection().accumulate(Arrays.asList(1, 1), Arrays.asList(1, 1, 2, 2))).containsExactly(1);
 	}
 }
