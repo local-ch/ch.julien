@@ -82,7 +82,7 @@ public class Accumulators {
 		return new Accumulator<Iterable<T>, Iterable<T>>() {
 			@Override
 			public Iterable<T> accumulate(Iterable<T> arg0, Iterable<T> arg1) {
-				return Query.from(arg0).concat(arg1).distinct().asArrayList();
+				return Query.from(arg0).concat(arg1).asLinkedHashSet();
 			}
 		};
 	}
@@ -94,7 +94,7 @@ public class Accumulators {
 		return new Accumulator<Iterable<T>, Iterable<T>>() {
 			@Override
 			public Iterable<T> accumulate(Iterable<T> arg0, Iterable<T> arg1) {
-				return Query.from(arg0).intersect(arg1).asArrayList();
+				return Query.from(arg0).intersect(arg1).asLinkedHashSet();
 			}
 		};
 	}
