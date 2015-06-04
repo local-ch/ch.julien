@@ -1,5 +1,7 @@
 package ch.julien.query.util;
 
+import java.util.Map;
+
 import ch.julien.common.delegate.Func;
 
 
@@ -11,7 +13,7 @@ public class Funcs {
 	/**
 	 * Cast the element to <code>clazz</code>
 	 */
-	public static final <T> Func<Object, T> to(final Class<T> clazz) {
+	public static <T> Func<Object, T> to(final Class<T> clazz) {
 		return new Func<Object, T>() {
 			@SuppressWarnings("unchecked")
 			@Override public T invoke(Object arg) {
@@ -25,7 +27,7 @@ public class Funcs {
 	 *
 	 * @see String#replaceAll(String, String)
 	 */
-	public static final Func<String, String> replaceAll(final String regex, final String replacement) {
+	public static Func<String, String> replaceAll(final String regex, final String replacement) {
 		return new Func<String, String>() {
 			@Override
 			public String invoke(String arg) {
@@ -39,7 +41,7 @@ public class Funcs {
 	 *
 	 * @see String#trim()
 	 */
-	public static final Func<String, String> trimString() {
+	public static Func<String, String> trimString() {
 		return new Func<String, String>() {
 			@Override
 			public String invoke(String arg) {
@@ -53,7 +55,7 @@ public class Funcs {
 	 *
 	 * @see Object#toString()
 	 */
-	public static final Func<Object, String> toStringRepresentation() {
+	public static Func<Object, String> toStringRepresentation() {
 		return new Func<Object, String>() {
 			@Override
 			public String invoke(Object arg) {
@@ -67,7 +69,7 @@ public class Funcs {
 	 *
 	 * @see Integer#parseInt(String)
 	 */
-	public static final Func<String, Integer> parseInteger() {
+	public static Func<String, Integer> parseInteger() {
 		return new Func<String, Integer>() {
 			@Override
 			public Integer invoke(String arg) {
@@ -81,7 +83,7 @@ public class Funcs {
 	 *
 	 * @see Long#parseLong(String)
 	 */
-	public static final Func<String, Long> parseLong() {
+	public static Func<String, Long> parseLong() {
 		return new Func<String, Long>() {
 			@Override
 			public Long invoke(String arg) {
@@ -95,7 +97,7 @@ public class Funcs {
 	 *
 	 * @see Double#parseDouble(String)
 	 */
-	public static final Func<String, Double> parseDouble() {
+	public static Func<String, Double> parseDouble() {
 		return new Func<String, Double>() {
 			@Override
 			public Double invoke(String arg) {
@@ -107,11 +109,29 @@ public class Funcs {
 	/**
 	 * The unmodified element
 	 */
-	public static final <T> Func<T, T> self() {
+	public static <T> Func<T, T> self() {
 		return new Func<T, T>() {
 			@Override
 			public T invoke(T arg) {
 				return arg;
+			}
+		};
+	}
+
+	public static <T> Func<Map.Entry<T, ?>, T> mapEntryKey() {
+		return new Func<Map.Entry<T, ?>, T>() {
+			@Override
+			public T invoke(Map.Entry<T, ?> arg) {
+				return arg.getKey();
+			}
+		};
+	}
+
+	public static <T> Func<Map.Entry<?, T>, T> mapEntryValue() {
+		return new Func<Map.Entry<?, T>, T>() {
+			@Override
+			public T invoke(Map.Entry<?, T> arg) {
+				return arg.getValue();
 			}
 		};
 	}

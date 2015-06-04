@@ -4,6 +4,8 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import org.junit.Test;
 
+import ch.julien.common.util.MapBuilder;
+
 
 public class FuncsTest {
 
@@ -198,5 +200,17 @@ public class FuncsTest {
 		Object o = new Object();
 		assertThat(Funcs.self().invoke(o)).isEqualTo(o);
 		assertThat(Funcs.self().invoke(null)).isNull();
+	}
+
+	@Test
+	public void testMapEntryKey() {
+		assertThat(Funcs.mapEntryKey().invoke(MapBuilder.hashMap().key(null).value(1).build().entrySet().iterator().next())).isNull();
+		assertThat(Funcs.mapEntryKey().invoke(MapBuilder.hashMap().key("1").value(1).build().entrySet().iterator().next())).isEqualTo("1");
+	}
+
+	@Test
+	public void testMapEntryValue() {
+		assertThat(Funcs.mapEntryValue().invoke(MapBuilder.hashMap().key("null").value(null).build().entrySet().iterator().next())).isNull();
+		assertThat(Funcs.mapEntryValue().invoke(MapBuilder.hashMap().key("1").value(1).build().entrySet().iterator().next())).isEqualTo(1);
 	}
 }
