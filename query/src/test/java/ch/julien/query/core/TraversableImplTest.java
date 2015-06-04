@@ -9,16 +9,18 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+import org.fest.assertions.data.MapEntry;
 import org.junit.Test;
 
 import ch.julien.common.datastructure.Tuple;
@@ -27,6 +29,7 @@ import ch.julien.common.delegate.EqualityComparator;
 import ch.julien.common.delegate.Func;
 import ch.julien.common.delegate.Predicate;
 import ch.julien.common.monad.Option;
+import ch.julien.common.util.MapBuilder;
 
 public class TraversableImplTest {
 
@@ -270,6 +273,25 @@ public class TraversableImplTest {
 
 	@Test
 	public void testAsHashMap() {
+		Map<?, ?> actual0 = from(Collections.emptyMap().entrySet()).asHashMap();
+		assertThat(actual0).isEmpty();
+
+		Map<String, String> actual1 = from(MapBuilder.<String, String>hashMap().key("key").value("value").build().entrySet()).asHashMap();
+		assertThat(actual1).hasSize(1);
+		assertThat(actual1).contains(MapEntry.entry("key", "value"));
+
+		Map<Integer, Integer> actual2 = from(MapBuilder.hashMap().key(1).value(1).key(2).value(2).build().entrySet()).asHashMap();
+		assertThat(actual2).hasSize(2);
+		assertThat(actual2).contains(MapEntry.entry(1, 1), MapEntry.entry(2, 2));
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void testAsHashMap_Fail() {
+		from(asList("not an iterable of map-entries")).asHashMap();
+	}
+
+	@Test
+	public void testAsHashMapWithKeySelector() {
 		Person leeloo = Person.withFirstAndLastName("leeloo", "dallas");
 		Person korban = Person.withFirstAndLastName("korban", "dallas");
 
@@ -289,7 +311,7 @@ public class TraversableImplTest {
 	}
 
 	@Test
-	public void testAsHashMapWithElementSelector() {
+	public void testAsHashMapWithKeyAndElementSelector() {
 		List<Integer> integers = asList(1, 2);
 
 		HashMap<Integer, String> actual = from(integers).asHashMap(

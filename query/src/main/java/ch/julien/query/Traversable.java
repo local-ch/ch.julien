@@ -37,6 +37,7 @@ public interface Traversable<T> extends Iterable<T> {
 
 	<TCollection extends Collection<T>> TCollection asCollection(TCollection collection);
 
+	<TKey, TElement> HashMap<TKey, TElement> asHashMap();
 	<TKey> HashMap<TKey, T> asHashMap(Func<T, TKey> keySelector);
 	<TKey, TElement> HashMap<TKey, TElement> asHashMap(Func<T, TKey> keySelector, Func<T, TElement> elementSelector);
 
