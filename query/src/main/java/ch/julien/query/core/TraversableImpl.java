@@ -174,20 +174,24 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 
 	@Override
 	public <TKey, TElement> HashMap<TKey, TElement> asHashMap() {
-		return asHashMap(new Func<TSource, TKey>() {
-			@Override
-			@SuppressWarnings("unchecked")
-			public TKey invoke(TSource arg) {
-				return ((Map.Entry<TKey, TElement>) arg).getKey();
-			}
-		},
-		new Func<TSource, TElement>() {
-			@Override
-			@SuppressWarnings("unchecked")
-			public TElement invoke(TSource arg) {
-				return ((Map.Entry<TKey, TElement>) arg).getValue();
-			}
-		});
+		try {
+			return asHashMap(new Func<TSource, TKey>() {
+				@Override
+				@SuppressWarnings("unchecked")
+				public TKey invoke(TSource arg) {
+					return ((Map.Entry<TKey, TElement>) arg).getKey();
+				}
+			},
+			new Func<TSource, TElement>() {
+				@Override
+				@SuppressWarnings("unchecked")
+				public TElement invoke(TSource arg) {
+					return ((Map.Entry<TKey, TElement>) arg).getValue();
+				}
+			});
+		} catch (ClassCastException e) {
+			throw new IllegalStateException("Implicit conversion to map is only possible if elements of Traversable are of type java.util.Map.Entry", e);
+		}
 	}
 
 	@Override

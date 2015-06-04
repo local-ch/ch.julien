@@ -280,12 +280,12 @@ public class TraversableImplTest {
 		assertThat(actual1).hasSize(1);
 		assertThat(actual1).contains(MapEntry.entry("key", "value"));
 
-		Map<?, ?> actual2 = from(MapBuilder.hashMap().key(1).value(1).key(2).value(2).build().entrySet()).asHashMap();
+		Map<Integer, Integer> actual2 = from(MapBuilder.hashMap().key(1).value(1).key(2).value(2).build().entrySet()).asHashMap();
 		assertThat(actual2).hasSize(2);
 		assertThat(actual2).contains(MapEntry.entry(1, 1), MapEntry.entry(2, 2));
 	}
 
-	@Test(expected = ClassCastException.class)
+	@Test(expected = IllegalStateException.class)
 	public void testAsHashMap_Fail() {
 		from(asList("not an iterable of map-entries")).asHashMap();
 	}
