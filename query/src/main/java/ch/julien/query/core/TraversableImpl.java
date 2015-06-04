@@ -173,6 +173,24 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 	}
 
 	@Override
+	public <TKey, TElement> HashMap<TKey, TElement> asHashMap() {
+		return asHashMap(new Func<TSource, TKey>() {
+			@Override
+			@SuppressWarnings("unchecked")
+			public TKey invoke(TSource arg) {
+				return ((Map.Entry<TKey, TElement>) arg).getKey();
+			}
+		},
+		new Func<TSource, TElement>() {
+			@Override
+			@SuppressWarnings("unchecked")
+			public TElement invoke(TSource arg) {
+				return ((Map.Entry<TKey, TElement>) arg).getValue();
+			}
+		});
+	}
+
+	@Override
 	public <TKey> HashMap<TKey, TSource> asHashMap(Func<TSource, TKey> keySelector) {
 		return asHashMap(keySelector,
 			new Func<TSource, TSource>() {
