@@ -4,6 +4,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import org.junit.Test;
 
+import ch.julien.common.monad.Option;
 import ch.julien.common.util.MapBuilder;
 
 
@@ -212,5 +213,17 @@ public class FuncsTest {
 	public void testMapEntryValue() {
 		assertThat(Funcs.mapEntryValue().invoke(MapBuilder.hashMap().key("null").value(null).build().entrySet().iterator().next())).isNull();
 		assertThat(Funcs.mapEntryValue().invoke(MapBuilder.hashMap().key("1").value(1).build().entrySet().iterator().next())).isEqualTo(1);
+	}
+
+	@Test
+	public void testOptionValue() {
+		Object o = new Object();
+		assertThat(Funcs.optionValue().invoke(Option.some(o))).isEqualsToByComparingFields(o);
+		assertThat(Funcs.optionValue().invoke(Option.some(null))).isNull();
+	}
+
+	@Test(expected = UnsupportedOperationException.class)
+	public void testOptionValue_None() {
+		Funcs.optionValue().invoke(Option.none());
 	}
 }
