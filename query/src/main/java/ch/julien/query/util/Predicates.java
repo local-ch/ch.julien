@@ -244,10 +244,10 @@ public class Predicates {
 	 *
 	 * @see Option#hasValue()
 	 */
-	public static <T> Predicate<Option<T>> ifHasValue() {
-		return new Predicate<Option<T>>() {
+	public static Predicate<Option<?>> ifHasValue() {
+		return new Predicate<Option<?>>() {
 			@Override
-			public boolean invoke(Option<T> arg) {
+			public boolean invoke(Option<?> arg) {
 				return arg.hasValue();
 			}
 		};

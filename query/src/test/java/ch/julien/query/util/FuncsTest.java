@@ -218,7 +218,7 @@ public class FuncsTest {
 	@Test
 	public void testOptionValue() {
 		Object o = new Object();
-		assertThat(Funcs.optionValue().invoke(Option.some(o))).isEqualsToByComparingFields(o);
+		assertThat(Funcs.<Integer>optionValue().invoke(Option.some(1))).isEqualTo(1);
 		assertThat(Funcs.optionValue().invoke(Option.some(null))).isNull();
 	}
 

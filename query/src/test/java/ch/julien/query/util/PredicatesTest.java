@@ -210,7 +210,7 @@ public class PredicatesTest {
 	@Test
 	public void testIfHasValue() {
 		assertThat(Predicates.ifHasValue().invoke(Option.none())).isFalse();
-		assertThat(Predicates.ifHasValue().invoke(Option.some(new Object()))).isTrue();
+		assertThat(Predicates.ifHasValue().invoke(Option.some(1))).isTrue();
 		assertThat(Predicates.ifHasValue().invoke(Option.some(null))).isTrue();
 	}
 }
