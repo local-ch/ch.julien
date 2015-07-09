@@ -239,6 +239,11 @@ public class Predicates {
 		};
 	}
 
+	/**
+	 * Select if {@link Option} has a value
+	 *
+	 * @see Option#hasValue()
+	 */
 	public static <T> Predicate<Option<T>> ifHasValue() {
 		return new Predicate<Option<T>>() {
 			@Override

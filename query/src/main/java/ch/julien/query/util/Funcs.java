@@ -119,6 +119,11 @@ public class Funcs {
 		};
 	}
 
+	/**
+	 * The {@link Map.Entry}'s key
+	 *
+	 * @see Map.Entry#getKey()
+	 */
 	public static <T> Func<Map.Entry<T, ?>, T> mapEntryKey() {
 		return new Func<Map.Entry<T, ?>, T>() {
 			@Override
@@ -128,6 +133,11 @@ public class Funcs {
 		};
 	}
 
+	/**
+	 * The {@link Map.Entry}'s value
+	 *
+	 * @see Map.Entry#getValue()
+	 */
 	public static <T> Func<Map.Entry<?, T>, T> mapEntryValue() {
 		return new Func<Map.Entry<?, T>, T>() {
 			@Override
@@ -137,6 +147,11 @@ public class Funcs {
 		};
 	}
 
+	/**
+	 * The {@link Option}'s value
+	 *
+	 * @see Option#get()
+	 */
 	public static <T> Func<Option<T>, T> optionValue() {
 		return new Func<Option<T>, T>() {
 			@Override
