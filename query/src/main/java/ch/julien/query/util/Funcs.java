@@ -3,6 +3,7 @@ package ch.julien.query.util;
 import java.util.Map;
 
 import ch.julien.common.delegate.Func;
+import ch.julien.common.monad.Option;
 
 
 /**
@@ -136,4 +137,12 @@ public class Funcs {
 		};
 	}
 
+	public static <T> Func<Option<T>, T> optionValue() {
+		return new Func<Option<T>, T>() {
+			@Override
+			public T invoke(Option<T> arg) {
+				return arg.get();
+			}
+		};
+	}
 }

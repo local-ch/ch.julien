@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import ch.julien.common.delegate.Predicate;
+import ch.julien.common.monad.Option;
 import ch.julien.query.core.Query;
 
 
@@ -234,6 +235,15 @@ public class Predicates {
 			@Override
 			public boolean invoke(String arg) {
 				return arg != null && arg.matches(regex);
+			}
+		};
+	}
+
+	public static <T> Predicate<Option<T>> ifHasValue() {
+		return new Predicate<Option<T>>() {
+			@Override
+			public boolean invoke(Option<T> arg) {
+				return arg.hasValue();
 			}
 		};
 	}
