@@ -19,10 +19,9 @@ import ch.julien.common.monad.Option;
 import ch.julien.query.util.ArrayUtils;
 
 public interface Traversable<T> extends Iterable<T> {
-	T aggregate(Accumulator<T, T> accumulator);
-	<TAccumulate> TAccumulate aggregate(TAccumulate initial, Accumulator<TAccumulate, T> accumulator);
-	<TAccumulate, TResult> TResult aggregate(TAccumulate initial, Accumulator<TAccumulate, T> accumulator,
-		Func<TAccumulate, TResult> resultSelector);
+	T aggregate(Accumulator<T, ? super T> accumulator);
+	<TAccumulate> TAccumulate aggregate(TAccumulate initial, Accumulator<TAccumulate, ? super T> accumulator);
+	<TAccumulate, TResult> TResult aggregate(TAccumulate initial, Accumulator<TAccumulate, ? super T> accumulator, Func<TAccumulate, TResult> resultSelector);
 
 	boolean all(Predicate<? super T> predicate);
 
@@ -35,21 +34,21 @@ public interface Traversable<T> extends Iterable<T> {
 
 	ArrayList<T> asArrayList();
 
-	<TCollection extends Collection<T>> TCollection asCollection(TCollection collection);
+	<TCollection extends Collection<? super T>> TCollection asCollection(TCollection collection);
 
-	<TKey> HashMap<TKey, T> asHashMap(Func<T, TKey> keySelector);
-	<TKey, TElement> HashMap<TKey, TElement> asHashMap(Func<T, TKey> keySelector, Func<T, TElement> elementSelector);
+	<TKey> HashMap<TKey, T> asHashMap(Func<? super T, TKey> keySelector);
+	<TKey, TElement> HashMap<TKey, TElement> asHashMap(Func<? super T, TKey> keySelector, Func<? super T, TElement> elementSelector);
 
 	HashSet<T> asHashSet();
-	<TKey> HashSet<TKey> asHashSet(Func<T, TKey> keySelector);
+	<TKey> HashSet<TKey> asHashSet(Func<? super T, TKey> keySelector);
 
 	LinkedList<T> asLinkedList();
 
-	<TKey> LinkedHashMap<TKey, T> asLinkedHashMap(Func<T, TKey> keySelector);
-	<TKey, TElement> LinkedHashMap<TKey, TElement> asLinkedHashMap(Func<T, TKey> keySelector, Func<T, TElement> elementSelector);
+	<TKey> LinkedHashMap<TKey, T> asLinkedHashMap(Func<? super T, TKey> keySelector);
+	<TKey, TElement> LinkedHashMap<TKey, TElement> asLinkedHashMap(Func<? super T, TKey> keySelector, Func<? super T, TElement> elementSelector);
 
 	LinkedHashSet<T> asLinkedHashSet();
-	<TKey> LinkedHashSet<TKey> asLinkedHashSet(Func<T, TKey> keySelector);
+	<TKey> LinkedHashSet<TKey> asLinkedHashSet(Func<? super T, TKey> keySelector);
 
 	Traversable<T> concat(Iterable<? extends T> appendant);
 	Traversable<T> concat(T[] appendant);
@@ -59,14 +58,14 @@ public interface Traversable<T> extends Iterable<T> {
 	Traversable<T> difference(Iterable<? extends T> other);
 	Traversable<T> difference(Iterable<? extends T> other, EqualityComparator<T> equalityComparator);
 	Traversable<T> distinct();
-	Traversable<T> distinct(EqualityComparator<T> equalityComparator);
+	Traversable<T> distinct(EqualityComparator<? super T> equalityComparator);
 
-	Traversable<T> each(Action<T> action);
+	Traversable<T> each(Action<? super T> action);
 
 	Option<T> first();
 	Option<T> first(Predicate<? super T> predicate);
 
-	<TResult> Traversable<TResult> flat(Func<T, Iterable<TResult>> selector);
+	<TResult> Traversable<TResult> flat(Func<? super T, Iterable<TResult>> selector);
 
 	Traversable<T> intersect(Iterable<? extends T> other);
 	Traversable<T> intersect(Iterable<? extends T> other, EqualityComparator<T> equalityComparator);
@@ -83,11 +82,11 @@ public interface Traversable<T> extends Iterable<T> {
 	Traversable<T> skip(long count);
 	Traversable<T> take(long count);
 
-	<TKey> OrderedTraversable<T, TKey> sortBy(Func<T, TKey> keySelector);
-	<TKey> OrderedTraversable<T, TKey> sortBy(Func<T, TKey> keySelector, Comparator<TKey> comparator);
+	<TKey> OrderedTraversable<T, TKey> sortBy(Func<? super T, TKey> keySelector);
+	<TKey> OrderedTraversable<T, TKey> sortBy(Func<? super T, TKey> keySelector, Comparator<TKey> comparator);
 
-	<TKey> OrderedTraversable<T, TKey> sortByDescending(Func<T, TKey> keySelector);
-	<TKey> OrderedTraversable<T, TKey> sortByDescending(Func<T, TKey> keySelector, Comparator<TKey> comparator);
+	<TKey> OrderedTraversable<T, TKey> sortByDescending(Func<? super T, TKey> keySelector);
+	<TKey> OrderedTraversable<T, TKey> sortByDescending(Func<? super T, TKey> keySelector, Comparator<TKey> comparator);
 
 	Traversable<T> union(Iterable<? extends T> appendant);
 	Traversable<T> union(T[] appendant);

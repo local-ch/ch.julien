@@ -4,9 +4,9 @@ import ch.julien.common.delegate.EqualityComparator;
 
 class Key<T> {
 	protected final T value;
-	protected final EqualityComparator<T> equalityComparator;
+	protected final EqualityComparator<? super T> equalityComparator;
 
-	public Key(T value, EqualityComparator<T> equalityComparator) {
+	public Key(T value, EqualityComparator<? super T> equalityComparator) {
 		this.value = value;
 		this.equalityComparator = equalityComparator;
 	}

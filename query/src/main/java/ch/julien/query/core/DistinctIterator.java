@@ -7,10 +7,10 @@ import java.util.Iterator;
 import java.util.Set;
 
 class DistinctIterator<TSource> extends AbstractIterator<TSource, TSource> {
-	private final EqualityComparator<TSource> equalityComparator;
+	private final EqualityComparator<? super TSource> equalityComparator;
 	private final Set<Key<TSource>> set = new HashSet<Key<TSource>>();
 
-	public DistinctIterator(Iterator<? extends TSource> parent, EqualityComparator<TSource> equalityComparator) {
+	public DistinctIterator(Iterator<? extends TSource> parent, EqualityComparator<? super TSource> equalityComparator) {
 		super(parent);
 
 		this.equalityComparator = equalityComparator;

@@ -14,14 +14,14 @@ import ch.julien.query.OrderedTraversable;
 class OrderedTraversableImpl<TSource, TKey> extends TraversableImpl<TSource> implements OrderedTraversable<TSource, TKey> {
 	private final List<Comparator<TSource>> comparators;
 
-	public static <TSource, TKey> OrderedTraversableImpl<TSource, TKey> create(Iterable<TSource> source, Func<TSource, TKey> keySelector, Comparator<TKey> comparator,
+	public static <TSource, TKey> OrderedTraversableImpl<TSource, TKey> create(Iterable<TSource> source, Func<? super TSource, TKey> keySelector, Comparator<TKey> comparator,
 		boolean descending) {
 
 		return create(source, null, keySelector, comparator, descending);
 	}
 
 	private static <TSource, TKey> OrderedTraversableImpl<TSource, TKey> create(Iterable<TSource> source, List<Comparator<TSource>> comparators,
-		final Func<TSource, TKey> keySelector, final Comparator<TKey> comparator, final boolean descending) {
+		final Func<? super TSource, TKey> keySelector, final Comparator<TKey> comparator, final boolean descending) {
 
 		return new OrderedTraversableImpl<TSource, TKey>(
 			new OrderedIterable<TSource, TKey>(source, comparators, keySelector, comparator, descending)
@@ -35,24 +35,24 @@ class OrderedTraversableImpl<TSource, TKey> extends TraversableImpl<TSource> imp
 	}
 
 	@Override
-	public OrderedTraversable<TSource, TKey> thenBy(Func<TSource, TKey> keySelector) {
+	public OrderedTraversable<TSource, TKey> thenBy(Func<? super TSource, TKey> keySelector) {
 		return thenBy(keySelector, null);
 	}
 
 	@Override
-	public OrderedTraversable<TSource, TKey> thenBy(Func<TSource, TKey> keySelector, Comparator<TKey> comparator) {
+	public OrderedTraversable<TSource, TKey> thenBy(Func<? super TSource, TKey> keySelector, Comparator<TKey> comparator) {
 		return new OrderedTraversableImpl<TSource, TKey>(
 			new OrderedIterable<TSource, TKey>(this, comparators, keySelector, comparator, false)
 		);
 	}
 
 	@Override
-	public OrderedTraversable<TSource, TKey> thenByDescending(Func<TSource, TKey> keySelector) {
+	public OrderedTraversable<TSource, TKey> thenByDescending(Func<? super TSource, TKey> keySelector) {
 		return thenByDescending(keySelector, null);
 	}
 
 	@Override
-	public OrderedTraversable<TSource, TKey> thenByDescending(Func<TSource, TKey> keySelector, Comparator<TKey> comparator) {
+	public OrderedTraversable<TSource, TKey> thenByDescending(Func<? super TSource, TKey> keySelector, Comparator<TKey> comparator) {
 		return new OrderedTraversableImpl<TSource, TKey>(
 			new OrderedIterable<TSource, TKey>(this, comparators, keySelector, comparator, true)
 		);
@@ -64,7 +64,7 @@ class OrderedTraversableImpl<TSource, TKey> extends TraversableImpl<TSource> imp
 		private final List<Comparator<TSource>> comparators;
 
 		public OrderedIterable(Iterable<TSource> source, List<Comparator<TSource>> comparators,
-			final Func<TSource, TKey> keySelector, final Comparator<TKey> comparator, final boolean descending) {
+			final Func<? super TSource, TKey> keySelector, final Comparator<TKey> comparator, final boolean descending) {
 
 			Check.notNull(source, "source");
 			Check.notNull(keySelector, "keySelector");

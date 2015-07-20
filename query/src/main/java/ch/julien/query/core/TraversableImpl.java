@@ -27,6 +27,7 @@ import ch.julien.common.monad.Option;
 import ch.julien.query.OrderedTraversable;
 import ch.julien.query.Traversable;
 import ch.julien.query.util.ArrayUtils;
+import ch.julien.query.util.Funcs;
 
 class TraversableImpl<TSource> implements Traversable<TSource> {
 	protected final Iterable<TSource> source;
@@ -53,44 +54,30 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 	}
 
 	@Override
-	public TSource aggregate(Accumulator<TSource, TSource> accumulator) {
+	public TSource aggregate(Accumulator<TSource, ? super TSource> accumulator) {
 		Iterator<? extends TSource> iterator = this.source.iterator();
 
 		if (!iterator.hasNext()) {
 			throw new NoSuchElementException();
 		}
 
-		return aggregate(iterator, iterator.next(), accumulator,
-			new Func<TSource, TSource>() {
-				@Override
-				public TSource invoke(TSource arg) {
-					return arg;
-				}
-			}
-		);
+		return aggregate(iterator, iterator.next(), accumulator, Funcs.<TSource>self());
 	}
 
 	@Override
-	public <TAccumulate> TAccumulate aggregate(TAccumulate initial, Accumulator<TAccumulate, TSource> accumulator) {
-		return aggregate(this.source.iterator(), initial, accumulator,
-			new Func<TAccumulate, TAccumulate>() {
-				@Override
-				public TAccumulate invoke(TAccumulate arg) {
-					return arg;
-				}
-			}
-		);
+	public <TAccumulate> TAccumulate aggregate(TAccumulate initial, Accumulator<TAccumulate, ? super TSource> accumulator) {
+		return aggregate(this.source.iterator(), initial, accumulator, Funcs.<TAccumulate>self());
 	}
 
 	@Override
-	public <TAccumulate, TResult> TResult aggregate(TAccumulate initial, Accumulator<TAccumulate, TSource> accumulator,
+	public <TAccumulate, TResult> TResult aggregate(TAccumulate initial, Accumulator<TAccumulate, ? super TSource> accumulator,
 		Func<TAccumulate, TResult> resultSelector) {
 
 		return aggregate(source.iterator(), initial, accumulator, resultSelector);
 	}
 
 	private <TAccumulate, TResult> TResult aggregate(Iterator<? extends TSource> source, TAccumulate initial,
-		Accumulator<TAccumulate, TSource> accumulator, Func<TAccumulate, TResult> resultSelector) {
+		Accumulator<TAccumulate, ? super TSource> accumulator, Func<TAccumulate, TResult> resultSelector) {
 
 		Check.notNull(accumulator, "accumulator");
 		Check.notNull(resultSelector, "resultSelector");
@@ -162,7 +149,7 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 	}
 
 	@Override
-	public <TCollection extends Collection<TSource>> TCollection asCollection(TCollection collection) {
+	public <TCollection extends Collection<? super TSource>> TCollection asCollection(TCollection collection) {
 		Check.notNull(collection, "collection");
 
 		for (TSource item : this.source) {
@@ -173,7 +160,7 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 	}
 
 	@Override
-	public <TKey> HashMap<TKey, TSource> asHashMap(Func<TSource, TKey> keySelector) {
+	public <TKey> HashMap<TKey, TSource> asHashMap(Func<? super TSource, TKey> keySelector) {
 		return asHashMap(keySelector,
 			new Func<TSource, TSource>() {
 				@Override
@@ -185,7 +172,7 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 	}
 
 	@Override
-	public <TKey, TElement> HashMap<TKey, TElement> asHashMap(Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector) {
+	public <TKey, TElement> HashMap<TKey, TElement> asHashMap(Func<? super TSource, TKey> keySelector, Func<? super TSource, TElement> elementSelector) {
 		Check.notNull(keySelector, "keySelector");
 		Check.notNull(elementSelector, "elementSelector");
 
@@ -211,7 +198,7 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 	}
 
 	@Override
-	public <TKey> HashSet<TKey> asHashSet(Func<TSource, TKey> keySelector) {
+	public <TKey> HashSet<TKey> asHashSet(Func<? super TSource, TKey> keySelector) {
 		Check.notNull(keySelector, "keySelector");
 
 		HashSet<TKey> set = new HashSet<TKey>();
@@ -235,19 +222,12 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 	}
 
 	@Override
-	public <TKey> LinkedHashMap<TKey, TSource> asLinkedHashMap(Func<TSource, TKey> keySelector) {
-		return asLinkedHashMap(keySelector,
-			new Func<TSource, TSource>() {
-				@Override
-				public TSource invoke(TSource element) {
-					return element;
-				}
-			}
-		);
+	public <TKey> LinkedHashMap<TKey, TSource> asLinkedHashMap(Func<? super TSource, TKey> keySelector) {
+		return asLinkedHashMap(keySelector, Funcs.<TSource>self());
 	}
 
 	@Override
-	public <TKey, TElement> LinkedHashMap<TKey, TElement> asLinkedHashMap(Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector) {
+	public <TKey, TElement> LinkedHashMap<TKey, TElement> asLinkedHashMap(Func<? super TSource, TKey> keySelector, Func<? super TSource, TElement> elementSelector) {
 		Check.notNull(keySelector, "keySelector");
 		Check.notNull(elementSelector, "elementSelector");
 
@@ -262,18 +242,11 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 
 	@Override
 	public LinkedHashSet<TSource> asLinkedHashSet() {
-		return asLinkedHashSet(
-			new Func<TSource, TSource>() {
-				@Override
-				public TSource invoke(TSource element) {
-					return element;
-				}
-			}
-		);
+		return asLinkedHashSet(Funcs.<TSource>self());
 	}
 
 	@Override
-	public <TKey> LinkedHashSet<TKey> asLinkedHashSet(Func<TSource, TKey> keySelector) {
+	public <TKey> LinkedHashSet<TKey> asLinkedHashSet(Func<? super TSource, TKey> keySelector) {
 		Check.notNull(keySelector, "keySelector");
 
 		LinkedHashSet<TKey> set = new LinkedHashSet<TKey>();
@@ -360,7 +333,7 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 	}
 
 	@Override
-	public Traversable<TSource> distinct(final EqualityComparator<TSource> equalityComparator) {
+	public Traversable<TSource> distinct(final EqualityComparator<? super TSource> equalityComparator) {
 		return new TraversableImpl<TSource>(
 			new Iterable<TSource>() {
 				@Override
@@ -372,7 +345,7 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 	}
 
 	@Override
-	public Traversable<TSource> each(final Action<TSource> action) {
+	public Traversable<TSource> each(final Action<? super TSource> action) {
 		return new TraversableImpl<TSource>(
 			new Iterable<TSource>() {
 				@Override
@@ -405,7 +378,7 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 	}
 
 	@Override
-	public <TResult> Traversable<TResult> flat(final Func<TSource, Iterable<TResult>> selector) {
+	public <TResult> Traversable<TResult> flat(final Func<? super TSource, Iterable<TResult>> selector) {
 		return new TraversableImpl<TResult>(
 			new Iterable<TResult>() {
 				@Override
@@ -605,22 +578,22 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 	}
 
 	@Override
-	public <TKey> OrderedTraversable<TSource, TKey> sortBy(Func<TSource, TKey> keySelector) {
+	public <TKey> OrderedTraversable<TSource, TKey> sortBy(Func<? super TSource, TKey> keySelector) {
 		return sortBy(keySelector, null);
 	}
 
 	@Override
-	public <TKey> OrderedTraversable<TSource, TKey> sortBy(Func<TSource, TKey> keySelector, Comparator<TKey> comparator) {
+	public <TKey> OrderedTraversable<TSource, TKey> sortBy(Func<? super TSource, TKey> keySelector, Comparator<TKey> comparator) {
 		return OrderedTraversableImpl.create(this, keySelector, comparator, false);
 	}
 
 	@Override
-	public <TKey> OrderedTraversable<TSource, TKey> sortByDescending(Func<TSource, TKey> keySelector) {
+	public <TKey> OrderedTraversable<TSource, TKey> sortByDescending(Func<? super TSource, TKey> keySelector) {
 		return sortByDescending(keySelector, null);
 	}
 
 	@Override
-	public <TKey> OrderedTraversable<TSource, TKey> sortByDescending(Func<TSource, TKey> keySelector, Comparator<TKey> comparator) {
+	public <TKey> OrderedTraversable<TSource, TKey> sortByDescending(Func<? super TSource, TKey> keySelector, Comparator<TKey> comparator) {
 		return OrderedTraversableImpl.create(this, keySelector, comparator, true);
 	}
 

@@ -6,9 +6,9 @@ import ch.julien.common.delegate.Action;
 import java.util.Iterator;
 
 class EachIterator<TSource> extends AbstractIterator<TSource, TSource> {
-	private final Action<TSource> action;
+	private final Action<? super TSource> action;
 
-	public EachIterator(Iterator<? extends TSource> parent, Action<TSource> action) {
+	public EachIterator(Iterator<? extends TSource> parent, Action<? super TSource> action) {
 		super(parent);
 
 		Check.notNull(action, "action");

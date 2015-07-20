@@ -6,11 +6,11 @@ import ch.julien.common.delegate.Func;
 import java.util.Iterator;
 
 class FlatIterator<TSource, TResult> extends AbstractIterator<TSource, TResult> {
-	private final Func<TSource, Iterable<TResult>> selector;
+	private final Func<? super TSource, Iterable<TResult>> selector;
 
 	private Iterator<TResult> child;
 
-	public FlatIterator(Iterator<? extends TSource> parent, Func<TSource, Iterable<TResult>> selector) {
+	public FlatIterator(Iterator<? extends TSource> parent, Func<? super TSource, Iterable<TResult>> selector) {
 		super(parent);
 
 		Check.notNull(selector, "selector");
