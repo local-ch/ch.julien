@@ -9,7 +9,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,6 +26,7 @@ import ch.julien.common.delegate.EqualityComparator;
 import ch.julien.common.delegate.Func;
 import ch.julien.common.delegate.Predicate;
 import ch.julien.common.monad.Option;
+import ch.julien.query.Traversable;
 
 public class TraversableImplTest {
 
@@ -336,7 +336,7 @@ public class TraversableImplTest {
 			}
 		);
 
-		assertThat(actual).containsExactly(leeloo.firstName, korban.firstName);
+		assertThat(actual).containsOnly(leeloo.firstName, korban.firstName);
 	}
 
 	@Test
