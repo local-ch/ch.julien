@@ -80,6 +80,8 @@ public interface Traversable<T> extends Iterable<T> {
 	Traversable<T> select(Predicate<? super T> predicate);
 
 	Traversable<T> skip(long count);
+	Traversable<T> skipWhile(Predicate<? super T> predicate);
+
 	Traversable<T> take(long count);
 
 	<TKey> OrderedTraversable<T, TKey> sortBy(Func<? super T, TKey> keySelector);

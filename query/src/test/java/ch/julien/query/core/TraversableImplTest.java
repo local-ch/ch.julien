@@ -767,6 +767,22 @@ public class TraversableImplTest {
 	}
 
 	@Test
+	public void testSkipWhile() {
+		List<Integer> integers = asList(1, 2, 3, 4, 1);
+
+		Traversable<Integer> actual = from(integers).skipWhile(
+			new Predicate<Integer>() {
+				@Override
+				public boolean invoke(Integer arg) {
+					return arg < 3;
+				}
+			}
+		);
+
+		assertThat(actual).containsExactly(3, 4, 1);
+	}
+
+	@Test
 	public void testTake() {
 		// test the output
 		List<Integer> integers = asList(1, 2, 3, 4);

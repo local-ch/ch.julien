@@ -555,6 +555,20 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 	}
 
 	@Override
+	public Traversable<TSource> skipWhile(final Predicate<? super TSource> predicate) {
+		Check.notNull(predicate, "predicate");
+
+		return new TraversableImpl<TSource>(
+			new Iterable<TSource>() {
+				@Override
+				public Iterator<TSource> iterator() {
+					return new SkipWhileIterator<TSource>(source.iterator(), predicate);
+				}
+			}
+		);
+	}
+
+	@Override
 	public Traversable<TSource> take(final long count) {
 		return new TraversableImpl<TSource>(
 			new Iterable<TSource>() {
