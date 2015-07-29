@@ -1,8 +1,11 @@
 package ch.julien.common.monad;
 
 public abstract class Option<T> {
+	private static final Option NONE = new None();
+
+	@SuppressWarnings("unchecked")
 	public static <T> Option<T> none() {
-		return new None<T>();
+		return (Option<T>) NONE;
 	}
 
 	public static <T> Option<T> some(T value) {
@@ -91,6 +94,25 @@ public abstract class Option<T> {
 		@Override
 		public Option<T> orOption(T other) {
 			return this;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (!(o instanceof Some)) {
+				return false;
+			}
+
+			Some some = (Some) o;
+
+			return !(value != null ? !value.equals(some.value) : some.value != null);
+		}
+
+		@Override
+		public int hashCode() {
+			return value != null ? value.hashCode() : 0;
 		}
 	}
 }
