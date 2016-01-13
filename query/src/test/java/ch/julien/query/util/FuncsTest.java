@@ -4,13 +4,14 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import org.junit.Test;
 
+import ch.julien.common.datastructure.Tuple;
 import ch.julien.common.monad.Option;
 import ch.julien.common.util.MapBuilder;
 
 
 public class FuncsTest {
 
-	private static interface ITestType {}
+	private interface ITestType {}
 	private static class TestType implements ITestType {}
 	private static class TestSubtype extends TestType {}
 
@@ -225,5 +226,27 @@ public class FuncsTest {
 	@Test(expected = UnsupportedOperationException.class)
 	public void testOptionValue_None() {
 		Funcs.optionValue().invoke(Option.none());
+	}
+
+	@Test
+	public void testFirstOfTuple() {
+		assertThat(Funcs.<Integer>firstOfTuple().invoke(new Tuple<Integer, String>(null, null))).isNull();
+		assertThat(Funcs.<Integer>firstOfTuple().invoke(new Tuple<Integer, String>(1, "1"))).isEqualTo(1);
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testFirstOfTuple_Exception() {
+		Funcs.firstOfTuple().invoke(null);
+	}
+
+	@Test
+	public void testSecondOfTuple() {
+		assertThat(Funcs.<String>secondOfTuple().invoke(new Tuple<Integer, String>(null, null))).isNull();
+		assertThat(Funcs.<String>secondOfTuple().invoke(new Tuple<Integer, String>(1, "1"))).isEqualTo("1");
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testSecondOfTuple_Exception() {
+		Funcs.secondOfTuple().invoke(null);
 	}
 }
