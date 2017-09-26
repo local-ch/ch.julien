@@ -11,7 +11,7 @@ It provides a fluent interface to support a list comprehension style.
   <dependency>
 		<groupId>ch.julien</groupId>
 		<artifactId>query</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<version>1.0.0.RELEASE</version>
 	</dependency>
 </dependencies>
 
