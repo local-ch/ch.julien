@@ -2,6 +2,7 @@ package ch.julien.query.util;
 
 import java.util.Map;
 
+import ch.julien.common.datastructure.Tuple;
 import ch.julien.common.delegate.Func;
 import ch.julien.common.monad.Option;
 
@@ -157,6 +158,24 @@ public class Funcs {
 			@Override
 			public T invoke(Option<T> arg) {
 				return arg.get();
+			}
+		};
+	}
+
+	public static <T> Func<Tuple<T, ?>, T> firstOfTuple() {
+		return new Func<Tuple<T, ?>, T>() {
+			@Override
+			public T invoke(Tuple<T, ?> arg) {
+				return arg.getFirst();
+			}
+		};
+	}
+
+	public static <T> Func<Tuple<?, T>, T> secondOfTuple() {
+		return new Func<Tuple<?, T>, T>() {
+			@Override
+			public T invoke(Tuple<?, T> arg) {
+				return arg.getSecond();
 			}
 		};
 	}
