@@ -51,7 +51,7 @@ public interface Traversable<T> extends Iterable<T> {
 	<TKey> LinkedHashSet<TKey> asLinkedHashSet(Func<? super T, TKey> keySelector);
 
 	Traversable<T> concat(Iterable<? extends T> appendant);
-	Traversable<T> concat(T[] appendant);
+	Traversable<T> concat(T... appendant);
 
 	long count();
 
@@ -91,7 +91,7 @@ public interface Traversable<T> extends Iterable<T> {
 	<TKey> OrderedTraversable<T, TKey> sortByDescending(Func<? super T, TKey> keySelector, Comparator<TKey> comparator);
 
 	Traversable<T> union(Iterable<? extends T> appendant);
-	Traversable<T> union(T[] appendant);
+	Traversable<T> union(T... appendant);
 
 	<TOther> Traversable<Tuple<T, TOther>> zip(Iterable<TOther> other);
 	<TOther> Traversable<Tuple<T, TOther>> zipAll(Iterable<TOther> other);

@@ -5,6 +5,7 @@ import ch.julien.query.Traversable;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
@@ -39,6 +40,37 @@ public class QueryTest {
 		Traversable<Integer> actual = Query.from(integers);
 
 		assertThat(actual).containsExactly(1, 2);
+	}
+	
+	@Test
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void testFromVarargs() {
+		/*
+		 * 3 cases:
+		 * 1) params are varargs
+		 * 2) param is array treated as varargs
+		 * 3) param is iterable (precedence over varargs method signature (1) )
+		 */
+		
+		// (case 1) from( element ) --> [element]
+		assertThat(Query.from("s1")).containsExactly("s1");
+		
+		// (case 1) from( element1, element2, … ) --> [element1, element2, …]
+		assertThat(Query.from("s1", "s2")).containsExactly("s1", "s2");
+		
+		// (case 2) from( array_of_elements[] ) --> [element1, element2, …]
+		String[] arrayOfElements = {"s1", "s2"};
+		assertThat(Query.from(arrayOfElements)).containsExactly("s1", "s2");
+		
+		// (case 3) from( iterable ) --> [element1, element2, …]
+		assertThat(Query.from(asList("s1", "s2"))).containsExactly("s1", "s2");
+		
+		// (case 1) from( iterable1, iterable2, ... ) --> [iterable1, iterable2, …]
+		assertThat(Query.from(asList("s1"), asList("s2"))).containsExactly(asList("s1"), asList("s2"));
+		
+		// (case 2) from( array_of_iterables[] ) --> [iterable1, iterable2, …]
+		List[] arrayOfIterables = { asList("s1") };
+		assertThat(Query.from(arrayOfIterables)).containsExactly(asList("s1"));
 	}
 
 	@Test

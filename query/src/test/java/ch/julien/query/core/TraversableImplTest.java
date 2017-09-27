@@ -368,6 +368,15 @@ public class TraversableImplTest {
 
 		assertThat(actual).containsExactly(1, 2, 3, 4);
 	}
+	
+	@Test
+	public void testConcatVarargs() {
+		List<Integer> first = asList(1, 2);
+
+		Iterable<Integer> actual = from(first).concat(3, 4);
+
+		assertThat(actual).containsExactly(1, 2, 3, 4);
+	}
 
 	@Test
 	public void testCountFromListIsGreaterThanZero() {

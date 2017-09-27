@@ -273,7 +273,7 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 	}
 
 	@Override
-	public Traversable<TSource> concat(final TSource[] appendant) {
+	public Traversable<TSource> concat(final TSource... appendant) {
 		return concat(
 			new TraversableImpl<TSource>(appendant)
 		);
@@ -617,7 +617,7 @@ class TraversableImpl<TSource> implements Traversable<TSource> {
 	}
 
 	@Override
-	public Traversable<TSource> union(TSource[] appendant) {
+	public Traversable<TSource> union(TSource... appendant) {
 		return union(new TraversableImpl<TSource>(appendant));
 	}
 
